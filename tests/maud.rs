@@ -7,7 +7,7 @@ fn index() {
             a[href="https://github.com/lambda-fairy/maud"] { "Maud" }
             " template language."
         }
-    }(String::new());
+    };
 
     let maud = maud::html! {
         h1 { "Hello, world!" }
@@ -16,8 +16,22 @@ fn index() {
             a href="https://github.com/lambda-fairy/maud" { "Maud" }
             " template language."
         }
-    }
-    .0;
+    };
 
-    assert_eq!(hiper, maud);
+    assert_eq!(hiper(String::new()), maud.0);
+}
+
+#[test]
+fn getting_started() {
+    let name = "Lyra";
+
+    let hiper = hiper::html! {
+        p[] { "Hi, " (name) "!" }
+    };
+
+    let maud = maud::html! {
+        p { "Hi, " (name) "!" }
+    };
+
+    assert_eq!(hiper(String::new()), maud.0);
 }

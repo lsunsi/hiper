@@ -35,7 +35,7 @@ macro_rules! html {
         }
     };
     ($c:literal $($tt:tt)*) => { |s| $crate::html!($($tt)*)(s + $c) };
-    (($c:expr)) => { |s| s + $c };
+    (($c:expr) $($tt:tt)*) => { |s| $crate::html!($($tt)*)(s + $c) };
 
     (@v $v:literal) => { |s| s + "\"" + $v + "\"" };
     (@v ($v:expr)) => { |s| s + "\"" + $v + "\"" };
@@ -132,5 +132,12 @@ mod tests {
     fn tag_literal_tag_literal() {
         let h = html! { a[] {} "oi" br[]; "blz" }(String::new());
         assert_eq!(&h, r#"<a></a>oi<br>blz"#);
+    }
+
+    #[test]
+    fn tag_literal_expr_expr_literal() {
+        let (name, surname) = ("carlos", "marcos");
+        let h = html! { br[]; "oi " (name) (surname) "!" }(String::new());
+        assert_eq!(&h, r#"<br>oi carlosmarcos!"#);
     }
 }
