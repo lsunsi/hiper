@@ -35,7 +35,7 @@ macro_rules! html {
         }
     };
     ($c:literal $($tt:tt)*) => { |s| $crate::html!($($tt)*)(s + $c) };
-    (($c:expr) $($tt:tt)*) => { |s| $crate::html!($($tt)*)(s + $c) };
+    (($c:expr) $($tt:tt)*) => { |s| $crate::html!($($tt)*)(s + &$c as &str) };
 
     (@v $v:literal) => { |s| s + "\"" + $v + "\"" };
     (@v ($v:expr)) => { |s| s + "\"" + $v + "\"" };
@@ -45,6 +45,12 @@ macro_rules! html {
 
 #[cfg(test)]
 mod tests {
+    #[test]
+    fn expr_as_str() {
+        let h = html! { ((1 + 2).to_string()) }(String::new());
+        assert_eq!(&h, r#"3"#);
+    }
+
     #[test]
     fn tag_void() {
         let h = html! { br[]; }(String::new());
@@ -139,5 +145,12 @@ mod tests {
         let (name, surname) = ("carlos", "marcos");
         let h = html! { br[]; "oi " (name) (surname) "!" }(String::new());
         assert_eq!(&h, r#"<br>oi carlosmarcos!"#);
+    }
+
+    #[test]
+    fn partials_extraction_still_needs_a_better_story() {
+        let render_user = |name: &'static str| html! { p[] { (name) } }(String::new());
+        let h = html! { div[] { (render_user("carlos")) } }(String::new());
+        assert_eq!(&h, r#"<div><p>carlos</p></div>"#);
     }
 }
