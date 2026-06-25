@@ -1,30 +1,33 @@
 #[macro_export]
 macro_rules! hiper {
+    ($tag:ident $ak:ident=($av:expr) {}) => {
+        |s: String| {
+            s + "<"
+                + stringify!($tag)
+                + " "
+                + stringify!($ak)
+                + "=\""
+                + $av
+                + "\"></"
+                + stringify!($tag)
+                + ">"
+        }
+    };
     ($tag:ident $ak:ident=$av:literal {}) => {
-        |mut s: String| {
-            let tag = stringify!($tag);
-            s.push('<');
-            s.push_str(tag);
-            s.push(' ');
-            s.push_str(stringify!($ak));
-            s.push('=');
-            s.push_str(stringify!($av));
-            s.push_str("></");
-            s.push_str(tag);
-            s.push('>');
-            s
+        |s: String| {
+            s + "<"
+                + stringify!($tag)
+                + " "
+                + stringify!($ak)
+                + "="
+                + stringify!($av)
+                + "></"
+                + stringify!($tag)
+                + ">"
         }
     };
     ($tag:ident {}) => {
-        |mut s: String| {
-            let tag = stringify!($tag);
-            s.push('<');
-            s.push_str(tag);
-            s.push_str("></");
-            s.push_str(tag);
-            s.push('>');
-            s
-        }
+        |s: String| s + "<" + stringify!($tag) + "></" + stringify!($tag) + ">"
     };
 }
 
@@ -32,13 +35,20 @@ macro_rules! hiper {
 mod tests {
     #[test]
     fn tag_bare_empty() {
-        let h = hiper! { p {} }(String::new());
-        assert_eq!(&h, r#"<p></p>"#);
+        let h = hiper! { a {} }(String::new());
+        assert_eq!(&h, r#"<a></a>"#);
     }
 
     #[test]
     fn tag_empty_prop_lit() {
         let h = hiper! { a href="/sobre" {} }(String::new());
         assert_eq!(&h, r#"<a href="/sobre"></a>"#);
+    }
+
+    #[test]
+    fn tag_empty_prop_var() {
+        let href = "/amigos";
+        let h = hiper! { a href=(href) {} }(String::new());
+        assert_eq!(&h, r#"<a href="/amigos"></a>"#);
     }
 }
