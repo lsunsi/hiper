@@ -51,33 +51,52 @@ macro_rules! hiper {
     ($tag:ident {}) => {
         |s: String| s + "<" + stringify!($tag) + "></" + stringify!($tag) + ">"
     };
+    ($tag:ident { $child:literal }) => {
+        |s: String| s + "<" + stringify!($tag) + ">" + $child +"</" + stringify!($tag) + ">"
+    };
+    ($tag:ident { ($child:expr) }) => {
+        |s: String| s + "<" + stringify!($tag) + ">" + $child +"</" + stringify!($tag) + ">"
+    };
 }
 
 #[cfg(test)]
 mod tests {
     #[test]
-    fn tag_bare_empty() {
+    fn tag_empty() {
         let h = hiper! { a {} }(String::new());
         assert_eq!(&h, r#"<a></a>"#);
     }
 
     #[test]
-    fn tag_empty_attr_lit() {
+    fn tag_attr_lit() {
         let h = hiper! { a href="/sobre" {} }(String::new());
         assert_eq!(&h, r#"<a href="/sobre"></a>"#);
     }
 
     #[test]
-    fn tag_empty_attr_expr() {
+    fn tag_attr_expr() {
         let href = "/amigos";
         let h = hiper! { a href=(href) {} }(String::new());
         assert_eq!(&h, r#"<a href="/amigos"></a>"#);
     }
 
     #[test]
-    fn tag_empty_attr_lit_expr() {
+    fn tag_attr_lit_expr() {
         let target = "_blank";
         let h = hiper! { a href="/sobre", target=(target) {} }(String::new());
         assert_eq!(&h, r#"<a href="/sobre" target="_blank"></a>"#);
+    }
+
+    #[test]
+    fn tag_child_lit() {
+        let h = hiper! { a { "oiblz" } }(String::new());
+        assert_eq!(&h, r#"<a>oiblz</a>"#);
+    }
+
+    #[test]
+    fn tag_child_expr() {
+        let child = "oiblz";
+        let h = hiper! { a { (child) } }(String::new());
+        assert_eq!(&h, r#"<a>oiblz</a>"#);
     }
 }
