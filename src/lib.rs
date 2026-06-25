@@ -15,7 +15,7 @@ macro_rules! hiper {
             s
         }
     };
-    ($tag:ident[$($k:ident=$v:tt)*] { $($c:tt)* }) => {
+    ($tag:ident[$($k:ident=$v:tt)*] { $($c:tt)* } $($tt:tt)*) => {
         |mut s| {
             s += "<";
             s += stringify!($tag);
@@ -30,6 +30,7 @@ macro_rules! hiper {
             s += "</";
             s += stringify!($tag);
             s += ">";
+            s = hiper!($($tt)*)(s);
             s
         }
     };
@@ -112,5 +113,11 @@ mod tests {
     fn tag_void_tag_void() {
         let h = hiper! { br[]; link[]; }(String::new());
         assert_eq!(&h, r#"<br><link>"#);
+    }
+
+    #[test]
+    fn tag_empty_tag_empty() {
+        let h = hiper! { a[] {} p[] {} }(String::new());
+        assert_eq!(&h, r#"<a></a><p></p>"#);
     }
 }
