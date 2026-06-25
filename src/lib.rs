@@ -26,7 +26,7 @@ macro_rules! hiper {
                 s = hiper!(@v $v)(s);
             )*
             s += ">";
-            s = hiper!(@c $($c)*)(s);
+            s = hiper!($($c)*)(s);
             s += "</";
             s += stringify!($tag);
             s += ">";
@@ -34,11 +34,12 @@ macro_rules! hiper {
             s
         }
     };
-    (@c $c:literal) => { |s| s + $c };
-    (@c ($c:expr)) => { |s| s + $c };
-    (@c) => { |s| s };
+    ($c:literal) => { |s| s + $c };
+    (($c:expr)) => { |s| s + $c };
+
     (@v $v:literal) => { |s| s + "\"" + $v + "\"" };
     (@v ($v:expr)) => { |s| s + "\"" + $v + "\"" };
+
     () => { |s| s }
 }
 
@@ -119,5 +120,11 @@ mod tests {
     fn tag_empty_tag_empty() {
         let h = hiper! { a[] {} p[] {} }(String::new());
         assert_eq!(&h, r#"<a></a><p></p>"#);
+    }
+
+    #[test]
+    fn tag_nested() {
+        let h = hiper! { a[] { p[] { br[]; } } }(String::new());
+        assert_eq!(&h, r#"<a><p><br></p></a>"#);
     }
 }
