@@ -1,5 +1,27 @@
 #[macro_export]
 macro_rules! hiper {
+    ($tag:ident $($akl:ident=$avl:literal)*, $($ake:ident=($ave:expr))* {}) => {
+        |s: String| {
+            s + "<"
+                + stringify!($tag)
+                $(
+                    + " "
+                    + stringify!($akl)
+                    + "="
+                    + stringify!($avl)
+                )*
+                $(
+                    + " "
+                    + stringify!($ake)
+                    + "=\""
+                    + $ave
+                    + "\""
+                )*
+                + "></"
+                + stringify!($tag)
+                + ">"
+        }
+    };
     ($tag:ident $ak:ident=($av:expr) {}) => {
         |s: String| {
             s + "<"
@@ -40,15 +62,22 @@ mod tests {
     }
 
     #[test]
-    fn tag_empty_prop_lit() {
+    fn tag_empty_attr_lit() {
         let h = hiper! { a href="/sobre" {} }(String::new());
         assert_eq!(&h, r#"<a href="/sobre"></a>"#);
     }
 
     #[test]
-    fn tag_empty_prop_var() {
+    fn tag_empty_attr_expr() {
         let href = "/amigos";
         let h = hiper! { a href=(href) {} }(String::new());
         assert_eq!(&h, r#"<a href="/amigos"></a>"#);
+    }
+
+    #[test]
+    fn tag_empty_attr_lit_expr() {
+        let target = "_blank";
+        let h = hiper! { a href="/sobre", target=(target) {} }(String::new());
+        assert_eq!(&h, r#"<a href="/sobre" target="_blank"></a>"#);
     }
 }
