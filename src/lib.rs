@@ -1,7 +1,7 @@
 #[macro_export]
 macro_rules! hiper {
-    ($tag:ident[$($k:ident=$v:tt)*];) => {
-        |mut s: String| {
+    ($tag:ident[$($k:ident=$v:tt)*]; $($tt:tt)*) => {
+        |mut s| {
             s += "<";
             s += stringify!($tag);
             $(
@@ -11,11 +11,12 @@ macro_rules! hiper {
                 s = hiper!(@v $v)(s);
             )*
             s += ">";
+            s = hiper!($($tt)*)(s);
             s
         }
     };
     ($tag:ident[$($k:ident=$v:tt)*] { $($c:tt)* }) => {
-        |mut s: String| {
+        |mut s| {
             s += "<";
             s += stringify!($tag);
             $(
@@ -35,12 +36,9 @@ macro_rules! hiper {
     (@c $c:literal) => { |s| s + $c };
     (@c ($c:expr)) => { |s| s + $c };
     (@c) => { |s| s };
-    (@v $v:literal) => {
-        |s: String| s + "\"" + $v + "\""
-    };
-    (@v ($v:expr)) => {
-        |s: String| s + "\"" + $v + "\""
-    };
+    (@v $v:literal) => { |s| s + "\"" + $v + "\"" };
+    (@v ($v:expr)) => { |s| s + "\"" + $v + "\"" };
+    () => { |s| s }
 }
 
 #[cfg(test)]
@@ -108,5 +106,11 @@ mod tests {
         let child = "oiblz";
         let h = hiper! { a[] { (child) } }(String::new());
         assert_eq!(&h, r#"<a>oiblz</a>"#);
+    }
+
+    #[test]
+    fn tag_void_tag_void() {
+        let h = hiper! { br[]; link[]; }(String::new());
+        assert_eq!(&h, r#"<br><link>"#);
     }
 }
