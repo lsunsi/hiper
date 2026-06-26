@@ -36,7 +36,7 @@ macro_rules! html {
     };
 
     ($c:literal $($tt:tt)*) => { |s| $crate::html!($($tt)*)($crate::Render::render($c, s)) };
-    (($c:expr) $($tt:tt)*) => { |s| $crate::html!($($tt)*)($crate::Render::render(&$c as &str, s)) };
+    (($c:expr) $($tt:tt)*) => { |s| $crate::html!($($tt)*)($crate::Render::render($c, s)) };
 
     (@v $v:literal) => { |s| s + "\"" + $v + "\"" };
     (@v ($v:expr)) => { |s| s + "\"" + $v + "\"" };

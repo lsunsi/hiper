@@ -13,6 +13,18 @@ fn render_string() {
 }
 
 #[test]
+fn render_none() {
+    let h = html! { (None::<&str>) }(String::new());
+    assert_eq!(&h, r#""#);
+}
+
+#[test]
+fn render_some_render() {
+    let h = html! { (Some("oiblz")) }(String::new());
+    assert_eq!(&h, r#"oiblz"#);
+}
+
+#[test]
 fn expr_as_str() {
     let h = html! { ((1 + 2).to_string()) }(String::new());
     assert_eq!(&h, r#"3"#);
