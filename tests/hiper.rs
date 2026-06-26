@@ -1,4 +1,4 @@
-pub use hiper::html;
+pub use hiper::{Render, html};
 
 #[test]
 fn render_str() {
@@ -127,8 +127,8 @@ fn tag_literal_expr_expr_literal() {
 }
 
 #[test]
-fn partials_extraction_still_needs_a_better_story() {
-    let render_user = |name: &'static str| html! { p[] { (name) } }(String::new());
+fn tag_nested_render_expr() {
+    let render_user = |name: &'static str| html! { p[] { (name) } };
     let h = html! { div[] { (render_user("carlos")) } }(String::new());
     assert_eq!(&h, r#"<div><p>carlos</p></div>"#);
 }

@@ -16,7 +16,7 @@ macro_rules! html {
         }
     };
     ($tag:ident[$($k:ident=$v:tt)*] { $($c:tt)* } $($tt:tt)*) => {
-        |mut s| {
+        move |mut s| {
             s += "<";
             s += stringify!($tag);
             $(

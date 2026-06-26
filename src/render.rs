@@ -21,3 +21,9 @@ impl<T: Render> Render for Option<T> {
         if let Some(t) = self { t.render(to) } else { to }
     }
 }
+
+impl<F: FnOnce(String) -> String> Render for F {
+    fn render(self, to: String) -> String {
+        self(to)
+    }
+}
