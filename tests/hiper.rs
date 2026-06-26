@@ -1,0 +1,122 @@
+pub use hiper::html;
+
+#[test]
+fn render_str() {
+    let h = html! { "oiblz" }(String::new());
+    assert_eq!(&h, r#"oiblz"#);
+}
+
+#[test]
+fn render_string() {
+    let h = html! { (String::from("oiblz")) }(String::new());
+    assert_eq!(&h, r#"oiblz"#);
+}
+
+#[test]
+fn expr_as_str() {
+    let h = html! { ((1 + 2).to_string()) }(String::new());
+    assert_eq!(&h, r#"3"#);
+}
+
+#[test]
+fn tag_void() {
+    let h = html! { br[]; }(String::new());
+    assert_eq!(&h, r#"<br>"#);
+}
+
+#[test]
+fn tag_void_attr_lit() {
+    let h = html! { br[id="berre"]; }(String::new());
+    assert_eq!(&h, r#"<br id="berre">"#);
+}
+
+#[test]
+fn tag_void_attr_expr() {
+    let id = "berre";
+    let h = html! { br[id=(id)]; }(String::new());
+    assert_eq!(&h, r#"<br id="berre">"#);
+}
+
+#[test]
+fn tag_void_attr_lit_expr() {
+    let href = "/estilo";
+    let h = html! { link[rel="stylesheet" href=(href)]; }(String::new());
+    assert_eq!(&h, r#"<link rel="stylesheet" href="/estilo">"#);
+}
+
+#[test]
+fn tag_empty() {
+    let h = html! { a[] {} }(String::new());
+    assert_eq!(&h, r#"<a></a>"#);
+}
+
+#[test]
+fn tag_attr_lit() {
+    let h = html! { a[href="/sobre"] {} }(String::new());
+    assert_eq!(&h, r#"<a href="/sobre"></a>"#);
+}
+
+#[test]
+fn tag_attr_expr() {
+    let href = "/amigos";
+    let h = html! { a[href=(href)] {} }(String::new());
+    assert_eq!(&h, r#"<a href="/amigos"></a>"#);
+}
+
+#[test]
+fn tag_attr_lit_expr() {
+    let target = "_blank";
+    let h = html! { a[href="/sobre" target=(target)] {} }(String::new());
+    assert_eq!(&h, r#"<a href="/sobre" target="_blank"></a>"#);
+}
+
+#[test]
+fn tag_child_lit() {
+    let h = html! { a[] { "oiblz" } }(String::new());
+    assert_eq!(&h, r#"<a>oiblz</a>"#);
+}
+
+#[test]
+fn tag_child_expr() {
+    let child = "oiblz";
+    let h = html! { a[] { (child) } }(String::new());
+    assert_eq!(&h, r#"<a>oiblz</a>"#);
+}
+
+#[test]
+fn tag_void_tag_void() {
+    let h = html! { br[]; link[]; }(String::new());
+    assert_eq!(&h, r#"<br><link>"#);
+}
+
+#[test]
+fn tag_empty_tag_empty() {
+    let h = html! { a[] {} p[] {} }(String::new());
+    assert_eq!(&h, r#"<a></a><p></p>"#);
+}
+
+#[test]
+fn tag_nested() {
+    let h = html! { a[] { p[] { br[]; } } }(String::new());
+    assert_eq!(&h, r#"<a><p><br></p></a>"#);
+}
+
+#[test]
+fn tag_literal_tag_literal() {
+    let h = html! { a[] {} "oi" br[]; "blz" }(String::new());
+    assert_eq!(&h, r#"<a></a>oi<br>blz"#);
+}
+
+#[test]
+fn tag_literal_expr_expr_literal() {
+    let (name, surname) = ("carlos", "marcos");
+    let h = html! { br[]; "oi " (name) (surname) "!" }(String::new());
+    assert_eq!(&h, r#"<br>oi carlosmarcos!"#);
+}
+
+#[test]
+fn partials_extraction_still_needs_a_better_story() {
+    let render_user = |name: &'static str| html! { p[] { (name) } }(String::new());
+    let h = html! { div[] { (render_user("carlos")) } }(String::new());
+    assert_eq!(&h, r#"<div><p>carlos</p></div>"#);
+}
