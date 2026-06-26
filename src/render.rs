@@ -3,16 +3,14 @@ pub trait Render {
 }
 
 impl Render for &str {
-    fn render(self, mut to: String) -> String {
-        to.push_str(self);
-        to
+    fn render(self, to: String) -> String {
+        crate::escape::write(self, to)
     }
 }
 
 impl Render for String {
-    fn render(self, mut to: String) -> String {
-        to.push_str(&self);
-        to
+    fn render(self, to: String) -> String {
+        crate::escape::write(&self, to)
     }
 }
 

@@ -7,9 +7,21 @@ fn render_str() {
 }
 
 #[test]
+fn render_str_escape() {
+    let h = html! { r#"<p>'"bl&z"'</p>"# }(String::new());
+    assert_eq!(&h, r#"&lt;p&gt;&apos;&quot;bl&amp;z&quot;&apos;&lt;/p&gt;"#);
+}
+
+#[test]
 fn render_string() {
     let h = html! { (String::from("oiblz")) }(String::new());
     assert_eq!(&h, r#"oiblz"#);
+}
+
+#[test]
+fn render_string_escape() {
+    let h = html! { (String::from(r#"<p>'"bl&z"'</p>"#)) }(String::new());
+    assert_eq!(&h, r#"&lt;p&gt;&apos;&quot;bl&amp;z&quot;&apos;&lt;/p&gt;"#);
 }
 
 #[test]
