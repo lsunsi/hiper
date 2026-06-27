@@ -177,6 +177,49 @@ fn tag_if_false_else() {
 }
 
 #[test]
+fn tag_if_true_else_if() {
+    let h = html! { if (true) { "oi" } else if (false) { "blz" } };
+    assert_eq!(h(String::new()), r#"oi"#);
+}
+
+#[test]
+fn tag_if_false_else_if_true() {
+    let h = html! { if (false) { "oi" } else if (true) { "blz" } };
+    assert_eq!(h(String::new()), r#"blz"#);
+}
+
+#[test]
+fn tag_if_false_else_if_false_else_if_true() {
+    let h = html! { if (false) { "oi" } else if (false) { "blz" } else if (true) { "!" } };
+    assert_eq!(h(String::new()), r#"!"#);
+}
+
+#[test]
+fn tag_if_false_else_if_true_else() {
+    let h = html! { if (false) { "oi" } else if (true) { "blz" } else { "!" } };
+    assert_eq!(h(String::new()), r#"blz"#);
+}
+
+#[test]
+fn tag_if_false_else_if_false_else() {
+    let h = html! { if (false) { "oi" } else if (false) { "blz" } else { "!" } };
+    assert_eq!(h(String::new()), r#"!"#);
+}
+
+#[test]
+fn tag_if_false_else_if_false_else_if_true_else() {
+    let h =
+        html! { if (false) { "oi" } else if (false) { "blz" } else if (true) { "!" } else { "." } };
+    assert_eq!(h(String::new()), r#"!"#);
+}
+
+#[test]
+fn tag_if_false_else_if_false_else_if_false_else() {
+    let h = html! { if (false) { "oi" } else if (false) { "blz" } else if (false) { "!" } else { "." } };
+    assert_eq!(h(String::new()), r#"."#);
+}
+
+#[test]
 fn tag_if_let_true() {
     let text = Some("oiblz");
     let h = html! { div[] { if let Some(a) = text { p[] { (a) } } } }(String::new());

@@ -394,40 +394,41 @@ mod splices_and_toggles {
 
 mod control_structures {
     #[test]
-    #[ignore]
     fn branching_with_if_and_else_base() {
-        unimplemented!();
-        // #[derive(PartialEq)]
-        // enum Princess { Celestia, Luna, Cadance, TwilightSparkle }
+        #[derive(PartialEq)]
+        enum Princess {
+            Celestia,
+            Luna,
+        }
 
-        // let user = Princess::Celestia;
-        // assert_tmpl!({
-        //     @if user == Princess::Luna {
-        //         h1 { "Super secret woona to-do list" }
-        //         ul {
-        //             li { "Nuke the Crystal Empire" }
-        //             li { "Kick a puppy" }
-        //             li { "Evil laugh" }
-        //         }
-        //     } @else if user == Princess::Celestia {
-        //         p { "Sister, please stop reading my diary. It's rude." }
-        //     } @else {
-        //         p { "Nothing to see here; move along." }
-        //     }
-        // }, {
-        //     @if user == Princess::Luna {
-        //         h1 { "Super secret woona to-do list" }
-        //         ul {
-        //             li { "Nuke the Crystal Empire" }
-        //             li { "Kick a puppy" }
-        //             li { "Evil laugh" }
-        //         }
-        //     } @else if user == Princess::Celestia {
-        //         p { "Sister, please stop reading my diary. It's rude." }
-        //     } @else {
-        //         p { "Nothing to see here; move along." }
-        //     }
-        // });
+        let user = Princess::Celestia;
+        assert_tmpl!({
+            @if user == Princess::Luna {
+                h1 { "Super secret woona to-do list" }
+                ul {
+                    li { "Nuke the Crystal Empire" }
+                    li { "Kick a puppy" }
+                    li { "Evil laugh" }
+                }
+            } @else if user == Princess::Celestia {
+                p { "Sister, please stop reading my diary. Its rude." }
+            } @else {
+                p { "Nothing to see here; move along." }
+            }
+        }, {
+            if (user == Princess::Luna) {
+                h1[] { "Super secret woona to-do list" }
+                ul[] {
+                    li[] { "Nuke the Crystal Empire" }
+                    li[] { "Kick a puppy" }
+                    li[] { "Evil laugh" }
+                }
+            } else if (user == Princess::Celestia) {
+                p[] { "Sister, please stop reading my diary. Its rude." }
+            } else {
+                p[] { "Nothing to see here; move along." }
+            }
+        });
     }
 
     #[test]

@@ -41,11 +41,22 @@ macro_rules! html {
     (if let $cond:pat = $target:ident { $($itt:tt)* }) => {
         |s| if let $cond = $target { $crate::html!($($itt)*)(s) } else { s }
     };
-    (if ($cond:expr) { $($itt:tt)* } else { $($ett:tt)* }) => {
-        if $cond { $crate::html!($($itt)*) } else { $crate::html!($($ett)*) }
+
+    (if ($icond:expr) { $($ifbody:tt)* } $(else if ($eicond:expr) { $($eibody:tt)* })+ else { $($ebody:tt)* }) => {
+        if $icond { $crate::html!($($ifbody)*) }
+        $(else if $eicond { $crate::html!($($eibody)*) })+
+        else { $crate::html!($($ebody)*) }
     };
-    (if ($cond:expr) { $($itt:tt)* }) => {
-        if $cond { $crate::html!($($itt)*) } else { |s| s }
+    (if ($icond:expr) { $($ifbody:tt)* } $(else if ($eicond:expr) { $($eibody:tt)* })+) => {
+        if $icond { $crate::html!($($ifbody)*) }
+        $(else if $eicond { $crate::html!($($eibody)*) })+
+        else { |s| s }
+    };
+    (if ($icond:expr) { $($ibody:tt)* } else { $($ebody:tt)* }) => {
+        if $icond { $crate::html!($($ibody)*) } else { $crate::html!($($ebody)*) }
+    };
+    (if ($icond:expr) { $($ibody:tt)* }) => {
+        if $icond { $crate::html!($($ibody)*) } else { |s| s }
     };
 
     ($c:literal $($tt:tt)*) => { |s| $crate::html!($($tt)*)($crate::Render::render($c, s)) };
