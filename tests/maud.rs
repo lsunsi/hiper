@@ -556,83 +556,78 @@ mod control_structures {
 
 mod partials {
     #[test]
-    #[ignore]
     fn index() {
-        unimplemented!();
+        mod m {
+            fn header(page_title: &str) -> maud::Markup {
+                maud::html! {
+                    (maud::DOCTYPE)
+                    meta charset="utf-8";
+                    title { (page_title) }
+                }
+            }
 
-        // mod maud {
-        //     use maud::{DOCTYPE, Markup, html};
-        //     fn header(page_title: &str) -> Markup {
-        //         html! {
-        //             (DOCTYPE)
-        //             meta charset="utf-8";
-        //             title { (page_title) }
-        //         }
-        //     }
+            fn footer() -> maud::Markup {
+                maud::html! {
+                    footer {
+                        a href="rss.atom" { "RSS Feed" }
+                    }
+                }
+            }
 
-        //     fn footer() -> Markup {
-        //         html! {
-        //             footer {
-        //                 a href="rss.atom" { "RSS Feed" }
-        //             }
-        //         }
-        //     }
+            pub(super) fn page(title: &str, greeting_box: maud::Markup) -> maud::Markup {
+                maud::html! {
+                    (header(title))
+                    h1 { (title) }
+                    (greeting_box)
+                    (footer())
+                }
+            }
+        }
 
-        //     pub(super) fn page(title: &str, greeting_box: Markup) -> Markup {
-        //         html! {
-        //             (header(title))
-        //             h1 { (title) }
-        //             (greeting_box)
-        //             (footer())
-        //         }
-        //     }
-        // }
+        mod h {
+            fn header(page_title: &str) -> impl hiper::Render {
+                hiper::html! {
+                    (hiper::DOCTYPE)
+                    meta[charset="utf-8"];
+                    title[] { (page_title) }
+                }
+            }
 
-        // mod hiper {
-        //     use hiper::{DOCTYPE, Render, html};
-        //     fn header(page_title: &str) -> impl Render {
-        //         html! {
-        //             (DOCTYPE)
-        //             meta[charset="utf-8"];
-        //             title[] { (page_title) }
-        //         }
-        //     }
+            fn footer() -> impl hiper::Render {
+                hiper::html! {
+                    footer[] {
+                        a[href="rss.atom"] { "RSS Feed" }
+                    }
+                }
+            }
 
-        //     fn footer() -> impl Render {
-        //         html! {
-        //             footer[] {
-        //                 a[href="rss.atom"] { "RSS Feed" }
-        //             }
-        //         }
-        //     }
+            pub(super) fn page(title: &str, greeting: impl hiper::Render) -> impl hiper::Render {
+                hiper::html! {
+                    (header(title))
+                    h1[] { (title) }
+                    (greeting)
+                    (footer())
+                }
+            }
+        }
 
-        //     pub(super) fn page(title: &str, greeting_box: impl Render) -> impl Render {
-        //         html! {
-        //             (header(title))
-        //             h1[] { (title) }
-        //             (greeting_box)
-        //             (footer())
-        //         }
-        //     }
-        // }
-
-        // assert_tmpl!(
-        //     {
-        //         (page(
-        //             "Hello!",
-        //             html! {
-        //                 div { "Greetings, Maud." }
-        //             },
-        //         ))
-        //     },
-        //     {
-        //         (page(
-        //             "Hello!",
-        //             html! {
-        //                 div { "Greetings, Maud." }
-        //             },
-        //         ))
-        //     }
-        // );
+        assert_tmpl!(
+            {
+                (m::page(
+                    "Hello!",
+                    maud::html! {
+                        div { "Greetings, Maud." }
+                    },
+                ))
+            },
+            {
+                (h::page(
+                    "Hello!",
+                    hiper::html! {
+                        div[] { "Greetings, Maud." }
+                    },
+                ))
+            }
+        );
     }
 }
