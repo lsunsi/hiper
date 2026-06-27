@@ -25,22 +25,25 @@ fn index() {
     });
 }
 
-#[test]
-fn getting_started() {
-    let name = "Lyra";
-    assert_tmpl!({ p { "Hi, " (name) "!" } }, { p[] { "Hi, " (name) "!" } });
+mod getting_started {
+    #[test]
+    fn index() {
+        let name = "Lyra";
+        assert_tmpl!({ p { "Hi, " (name) "!" } }, { p[] { "Hi, " (name) "!" } });
+    }
 }
 
-#[test]
-fn text_escaping_text() {
-    assert_tmpl!({ "Oatmeal, are you crazy?" }, { "Oatmeal, are you crazy?" });
-}
+mod text_and_escaping {
+    #[test]
+    fn text() {
+        assert_tmpl!({ "Oatmeal, are you crazy?" }, { "Oatmeal, are you crazy?" });
+    }
 
-#[test]
-fn text_escaping_raw_strings() {
-    assert_tmpl!({
-        pre {
-            r#"
+    #[test]
+    fn raw_strings() {
+        assert_tmpl!({
+            pre {
+                r#"
                 Rocks, these are my rocks.
                 Sediments make me sedimental.
                 Smooth and round,
@@ -48,10 +51,10 @@ fn text_escaping_raw_strings() {
                 Shades of brown
                 And gray.
             "#
-        }
-    }, {
-        pre[] {
-            r#"
+            }
+        }, {
+            pre[] {
+                r#"
                 Rocks, these are my rocks.
                 Sediments make me sedimental.
                 Smooth and round,
@@ -59,19 +62,577 @@ fn text_escaping_raw_strings() {
                 Shades of brown
                 And gray.
             "#
-        }
-    });
+            }
+        });
+    }
+
+    #[test]
+    fn escaping_and_preescaped() {
+        use hiper::Raw;
+        use maud::PreEscaped;
+        assert_tmpl!(
+            { "<script>alert(\"XSS\")</script>"(PreEscaped("<script>alert(\"XSS\")</script>",)) },
+            { "<script>alert(\"XSS\")</script>"(Raw("<script>alert(\"XSS\")</script>")) }
+        );
+    }
+
+    #[test]
+    fn the_doctype_constant() {
+        assert_tmpl!({ (maud::DOCTYPE) }, { (hiper::DOCTYPE) });
+    }
 }
 
-#[test]
-fn text_escaping_preescaped() {
-    assert_tmpl!(
-        { "<script>alert(\"XSS\")</script>"(maud::PreEscaped("<script>alert(\"XSS\")</script>")) },
-        { "<script>alert(\"XSS\")</script>"(hiper::Raw("<script>alert(\"XSS\")</script>")) }
-    );
+mod elements_and_attributes {
+    #[test]
+    fn elements_with_contents() {
+        assert_tmpl!({
+            h1 { "Poem" }
+            p {
+                strong { "Rock," }
+                " you are a rock."
+            }
+        }, {
+            h1[] { "Poem" }
+            p[] {
+                strong[] { "Rock," }
+                " you are a rock."
+            }
+        });
+    }
+
+    #[test]
+    fn void_elements() {
+        assert_tmpl!({
+            link rel="stylesheet" href="poetry.css";
+            p {
+                "Rock, you are a rock."
+                br;
+                "Gray, you are gray,"
+                br;
+                "Like a rock, which you are."
+                br;
+                "Rock."
+            }
+        }, {
+            link[rel="stylesheet" href="poetry.css"];
+            p[] {
+                "Rock, you are a rock."
+                br[];
+                "Gray, you are gray,"
+                br[];
+                "Like a rock, which you are."
+                br[];
+                "Rock."
+            }
+        });
+    }
+
+    #[test]
+    #[ignore]
+    fn custom_elements_and_data_attributes() {
+        unimplemented!()
+        // assert_tmpl!({
+        //     article data-index="12345" {
+        //         h1 { "My blog" }
+        //         tag-cloud { "pinkie pie pony cute" }
+        //     }
+        // }, {
+        //     article[data-index="12345"] {
+        //         h1[] { "My blog" }
+        //         tag-cloud[] { "pinkie pie pony cute" }
+        //     }
+        // });
+    }
+
+    #[test]
+    fn non_empty_attributes() {
+        assert_tmpl!({
+            ul {
+                li {
+                    a href="about:blank" { "Apple Bloom" }
+                }
+                li class="lower-middle" {
+                    "Sweetie Belle"
+                }
+                li dir="rtl" {
+                    "Scootaloo "
+                    small { "(also a chicken)" }
+                }
+            }
+        }, {
+            ul[] {
+                li[] {
+                    a[href="about:blank"] { "Apple Bloom" }
+                }
+                li[class="lower-middle"] {
+                    "Sweetie Belle"
+                }
+                li[dir="rtl"] {
+                    "Scootaloo "
+                    small[] { "(also a chicken)" }
+                }
+            }
+        });
+    }
+
+    #[test]
+    #[ignore]
+    fn empty_attributes() {
+        unimplemented!()
+        // assert_tmpl!({
+        //     form {
+        //         input type="checkbox" name="cupcakes" checked;
+        //         " "
+        //         label for="cupcakes" { "Do you like cupcakes?" }
+        //     }
+        // }, {
+        //     form[] {
+        //         input[type="checkbox" name="cupcakes" checked];
+        //         " "
+        //         label[for="cupcakes"] { "Do you like cupcakes?" }
+        //     }
+        // });
+    }
+
+    #[test]
+    #[ignore]
+    fn classes_and_ids_base() {
+        unimplemented!()
+        // assert_tmpl!({
+        //     input #cannon .big.scary.bright-red type="button" value="Launch Party Cannon";
+        // }, {
+        //     input #cannon .big.scary.bright-red type="button" value="Launch Party Cannon";
+        // });
+    }
+
+    #[test]
+    #[ignore]
+    fn classes_and_ids_quoted() {
+        unimplemented!()
+        // assert_tmpl!({
+        //     div."col-sm-2" { "Bootstrap column!" }
+        // }, {
+        //     div."col-sm-2" { "Bootstrap column!" }
+        // });
+    }
+
+    #[test]
+    #[ignore]
+    fn implicit_div_elements() {
+        unimplemented!()
+        // assert_tmpl!({
+        //     #main {
+        //         "Main content!"
+        //         .tip { "Storing food in a refrigerator can make it 20% cooler." }
+        //     }
+        // }, {
+        //     #main {
+        //         "Main content!"
+        //         .tip { "Storing food in a refrigerator can make it 20% cooler." }
+        //     }
+        // });
+    }
 }
 
-#[test]
-fn text_escaping_doctype() {
-    assert_tmpl!({ (maud::DOCTYPE) }, { (hiper::DOCTYPE) });
+mod splices_and_toggles {
+    #[test]
+    #[ignore]
+    fn base() {
+        unimplemented!();
+        // let best_pony = "Pinkie Pie";
+        // let numbers = [1, 2, 3, 4];
+        // assert_tmpl!({
+        //     p { "Hi, " (best_pony) "!" }
+        //     p {
+        //         "I have " (numbers.len()) " numbers, "
+        //         "and the first one is " (numbers[0])
+        //     }
+        // }, {
+        //     p[] { "Hi, " (best_pony) "!" }
+        //     p[] {
+        //         "I have " (numbers.len()) " numbers, "
+        //         "and the first one is " (numbers[0])
+        //     }
+        // });
+    }
+
+    #[test]
+    #[ignore]
+    fn block() {
+        unimplemented!();
+        // assert_tmpl!({
+        //     p {
+        //         ({
+        //             let f: Foo = something_convertible_to_foo()?;
+        //             f.time().format("%H%Mh")
+        //         })
+        //     }
+        // }, {
+        //     p {
+        //         ({
+        //             let f: Foo = something_convertible_to_foo()?;
+        //             f.time().format("%H%Mh")
+        //         })
+        //     }
+        // });
+    }
+
+    #[test]
+    #[ignore]
+    fn splices_in_attributes_base() {
+        unimplemented!();
+        // let secret_message = "Surprise!";
+        // assert_tmpl!({
+        //     p title=(secret_message) {
+        //         "Nothing to see here, move along."
+        //     }
+        // }, {
+        //     p title=(secret_message) {
+        //         "Nothing to see here, move along."
+        //     }
+        // });
+    }
+
+    #[test]
+    #[ignore]
+    fn splices_in_attributes_concat() {
+        unimplemented!();
+        // const GITHUB: &'static str = "https://github.com";
+        // assert_tmpl!({
+        //     a href={ (GITHUB) "/lambda-fairy/maud" } {
+        //         "Fork me on GitHub"
+        //     }
+        // }, {
+        //     a href={ (GITHUB) "/lambda-fairy/maud" } {
+        //         "Fork me on GitHub"
+        //     }
+        // });
+    }
+
+    #[test]
+    #[ignore]
+    fn splices_in_classes_and_ids() {
+        unimplemented!();
+        // let name = "rarity";
+        // let severity = "critical";
+        // assert_tmpl!({
+        //     aside #(name) {
+        //         p.{ "color-" (severity) } { "This is the worst! Possible! Thing!" }
+        //     }
+        // }, {
+        //     aside #(name) {
+        //         p.{ "color-" (severity) } { "This is the worst! Possible! Thing!" }
+        //     }
+        // });
+    }
+
+    #[test]
+    #[ignore]
+    fn what_can_be_spliced() {
+        unimplemented!();
+        // use maud::PreEscaped;
+        // let post = "<p>Pre-escaped</p>";
+        // assert_tmpl!({
+        //     h1 { "My super duper blog post" }
+        //     (PreEscaped(post))
+        // }, {
+        //     h1 { "My super duper blog post" }
+        //     (PreEscaped(post))
+        // });
+    }
+
+    #[test]
+    #[ignore]
+    fn toggles_base() {
+        unimplemented!();
+        // let allow_editing = true;
+        // assert_tmpl!({
+        //     p contenteditable[allow_editing] {
+        //         "Edit me, I "
+        //         em { "dare" }
+        //         " you."
+        //     }
+        // }, {
+        //     p contenteditable[allow_editing] {
+        //         "Edit me, I "
+        //         em { "dare" }
+        //         " you."
+        //     }
+        // });
+    }
+
+    #[test]
+    #[ignore]
+    fn toggles_classes() {
+        unimplemented!();
+        // let cuteness = 95;
+        // assert_tmpl!({
+        //     p.cute[cuteness > 50] { "Squee!" }
+        // }, {
+        //     p.cute[cuteness > 50] { "Squee!" }
+        // });
+    }
+
+    #[test]
+    #[ignore]
+    fn optional_attributes_with_values() {
+        unimplemented!();
+        // assert_tmpl!({
+        //     p title=[Some("Good password")] { "Correct horse" }
+
+        //     @let value = Some(42);
+        //     input value=[value];
+
+        //     @let title: Option<&str> = None;
+        //     p title=[title] { "Battery staple" }
+        // }, {
+        //     p title=[Some("Good password")] { "Correct horse" }
+
+        //     @let value = Some(42);
+        //     input value=[value];
+
+        //     @let title: Option<&str> = None;
+        //     p title=[title] { "Battery staple" }
+        // });
+    }
+}
+
+mod control_structures {
+    #[test]
+    #[ignore]
+    fn branching_with_if_and_else_base() {
+        unimplemented!();
+        // #[derive(PartialEq)]
+        // enum Princess { Celestia, Luna, Cadance, TwilightSparkle }
+
+        // let user = Princess::Celestia;
+        // assert_tmpl!({
+        //     @if user == Princess::Luna {
+        //         h1 { "Super secret woona to-do list" }
+        //         ul {
+        //             li { "Nuke the Crystal Empire" }
+        //             li { "Kick a puppy" }
+        //             li { "Evil laugh" }
+        //         }
+        //     } @else if user == Princess::Celestia {
+        //         p { "Sister, please stop reading my diary. It's rude." }
+        //     } @else {
+        //         p { "Nothing to see here; move along." }
+        //     }
+        // }, {
+        //     @if user == Princess::Luna {
+        //         h1 { "Super secret woona to-do list" }
+        //         ul {
+        //             li { "Nuke the Crystal Empire" }
+        //             li { "Kick a puppy" }
+        //             li { "Evil laugh" }
+        //         }
+        //     } @else if user == Princess::Celestia {
+        //         p { "Sister, please stop reading my diary. It's rude." }
+        //     } @else {
+        //         p { "Nothing to see here; move along." }
+        //     }
+        // });
+    }
+
+    #[test]
+    #[ignore]
+    fn branching_with_if_and_else_let() {
+        unimplemented!();
+        // let user = Some("Pinkie Pie");
+        // assert_tmpl!({
+        //     p {
+        //         "Hello, "
+        //         @if let Some(name) = user {
+        //             (name)
+        //         } @else {
+        //             "stranger"
+        //         }
+        //         "!"
+        //     }
+        // }, {
+        //     p {
+        //         "Hello, "
+        //         @if let Some(name) = user {
+        //             (name)
+        //         } @else {
+        //             "stranger"
+        //         }
+        //         "!"
+        //     }
+        // });
+    }
+
+    #[test]
+    #[ignore]
+    fn looping_with_for() {
+        unimplemented!();
+        // assert_tmpl!({
+        //     p { "My favorite ponies are:" }
+        //     ol {
+        //         @for name in &names {
+        //             li { (name) }
+        //         }
+        //     }
+        // }, {
+        //     p { "My favorite ponies are:" }
+        //     ol {
+        //         @for name in &names {
+        //             li { (name) }
+        //         }
+        //     }
+        // });
+    }
+
+    #[test]
+    #[ignore]
+    fn declaring_variables_with_let() {
+        unimplemented!();
+        // let names = ["Applejack", "Rarity", "Fluttershy"];
+        // assert_tmpl!({
+        //     @for name in &names {
+        //         @let first_letter = name.chars().next().unwrap();
+        //         p {
+        //             "The first letter of "
+        //             b { (name) }
+        //             " is "
+        //             b { (first_letter) }
+        //             "."
+        //         }
+        //     }
+        // }, {
+        //     @for name in &names {
+        //         @let first_letter = name.chars().next().unwrap();
+        //         p {
+        //             "The first letter of "
+        //             b { (name) }
+        //             " is "
+        //             b { (first_letter) }
+        //             "."
+        //         }
+        //     }
+        // });
+    }
+
+    #[test]
+    #[ignore]
+    fn matching_with_match() {
+        unimplemented!();
+        // enum Princess { Celestia, Luna, Cadance, TwilightSparkle }
+        // let user = Princess::Celestia;
+        // assert_tmpl!({
+        //     @match user {
+        //         Princess::Luna => {
+        //             h1 { "Super secret woona to-do list" }
+        //             ul {
+        //                 li { "Nuke the Crystal Empire" }
+        //                 li { "Kick a puppy" }
+        //                 li { "Evil laugh" }
+        //             }
+        //         },
+        //         Princess::Celestia => {
+        //             p { "Sister, please stop reading my diary. It's rude." }
+        //         },
+        //         _ => p { "Nothing to see here; move along." }
+        //     }
+        // }, {
+        //     @match user {
+        //         Princess::Luna => {
+        //             h1 { "Super secret woona to-do list" }
+        //             ul {
+        //                 li { "Nuke the Crystal Empire" }
+        //                 li { "Kick a puppy" }
+        //                 li { "Evil laugh" }
+        //             }
+        //         },
+        //         Princess::Celestia => {
+        //             p { "Sister, please stop reading my diary. It's rude." }
+        //         },
+        //         _ => p { "Nothing to see here; move along." }
+        //     }
+        // });
+    }
+}
+
+mod partials {
+    #[test]
+    #[ignore]
+    fn index() {
+        unimplemented!();
+
+        // mod maud {
+        //     use maud::{DOCTYPE, Markup, html};
+        //     fn header(page_title: &str) -> Markup {
+        //         html! {
+        //             (DOCTYPE)
+        //             meta charset="utf-8";
+        //             title { (page_title) }
+        //         }
+        //     }
+
+        //     fn footer() -> Markup {
+        //         html! {
+        //             footer {
+        //                 a href="rss.atom" { "RSS Feed" }
+        //             }
+        //         }
+        //     }
+
+        //     pub(super) fn page(title: &str, greeting_box: Markup) -> Markup {
+        //         html! {
+        //             (header(title))
+        //             h1 { (title) }
+        //             (greeting_box)
+        //             (footer())
+        //         }
+        //     }
+        // }
+
+        // mod hiper {
+        //     use hiper::{DOCTYPE, Render, html};
+        //     fn header(page_title: &str) -> impl Render {
+        //         html! {
+        //             (DOCTYPE)
+        //             meta[charset="utf-8"];
+        //             title[] { (page_title) }
+        //         }
+        //     }
+
+        //     fn footer() -> impl Render {
+        //         html! {
+        //             footer[] {
+        //                 a[href="rss.atom"] { "RSS Feed" }
+        //             }
+        //         }
+        //     }
+
+        //     pub(super) fn page(title: &str, greeting_box: impl Render) -> impl Render {
+        //         html! {
+        //             (header(title))
+        //             h1[] { (title) }
+        //             (greeting_box)
+        //             (footer())
+        //         }
+        //     }
+        // }
+
+        // assert_tmpl!(
+        //     {
+        //         (page(
+        //             "Hello!",
+        //             html! {
+        //                 div { "Greetings, Maud." }
+        //             },
+        //         ))
+        //     },
+        //     {
+        //         (page(
+        //             "Hello!",
+        //             html! {
+        //                 div { "Greetings, Maud." }
+        //             },
+        //         ))
+        //     }
+        // );
+    }
 }
