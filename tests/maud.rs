@@ -325,18 +325,15 @@ mod splices_and_toggles {
     }
 
     #[test]
-    #[ignore]
     fn what_can_be_spliced() {
-        unimplemented!();
-        // use maud::PreEscaped;
-        // let post = "<p>Pre-escaped</p>";
-        // assert_tmpl!({
-        //     h1 { "My super duper blog post" }
-        //     (PreEscaped(post))
-        // }, {
-        //     h1 { "My super duper blog post" }
-        //     (PreEscaped(post))
-        // });
+        let post = "<p>Pre-escaped</p>";
+        assert_tmpl!({
+            h1 { "My super duper blog post" }
+            (maud::PreEscaped(post))
+        }, {
+            h1[] { "My super duper blog post" }
+            (hiper::Raw(post))
+        });
     }
 
     #[test]
