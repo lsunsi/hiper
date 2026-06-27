@@ -1,5 +1,5 @@
 pub(crate) fn write(mut raw: &str, mut to: String) -> String {
-    while let Some(index) = raw.find(&['\'', '"', '&', '<', '>']) {
+    while let Some(index) = raw.find(['\'', '"', '&', '<', '>']) {
         to.push_str(&raw[..index]);
         to.push_str(match raw.as_bytes()[index] {
             b'\'' => "&apos;",
