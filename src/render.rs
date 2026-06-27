@@ -25,3 +25,10 @@ impl<F: FnOnce(String) -> String> Render for F {
         self(to)
     }
 }
+
+impl<T: AsRef<str>> Render for crate::Raw<T> {
+    fn render(self, mut to: String) -> String {
+        to.push_str(self.0.as_ref());
+        to
+    }
+}
