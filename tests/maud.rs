@@ -236,24 +236,22 @@ mod elements_and_attributes {
 
 mod splices_and_toggles {
     #[test]
-    #[ignore]
     fn base() {
-        unimplemented!();
-        // let best_pony = "Pinkie Pie";
-        // let numbers = [1, 2, 3, 4];
-        // assert_tmpl!({
-        //     p { "Hi, " (best_pony) "!" }
-        //     p {
-        //         "I have " (numbers.len()) " numbers, "
-        //         "and the first one is " (numbers[0])
-        //     }
-        // }, {
-        //     p[] { "Hi, " (best_pony) "!" }
-        //     p[] {
-        //         "I have " (numbers.len()) " numbers, "
-        //         "and the first one is " (numbers[0])
-        //     }
-        // });
+        let best_pony = "Pinkie Pie";
+        let numbers = [1, 2, 3, 4];
+        assert_tmpl!({
+            p { "Hi, " (best_pony) "!" }
+            p {
+                "I have " (numbers.len()) " numbers, "
+                "and the first one is " (numbers[0])
+            }
+        }, {
+            p[] { "Hi, " (best_pony) "!" }
+            p[] {
+                "I have " (numbers.len()) " numbers, "
+                "and the first one is " (numbers[0])
+            }
+        });
     }
 
     #[test]

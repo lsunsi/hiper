@@ -32,3 +32,15 @@ impl<T: AsRef<str>> Render for crate::Raw<T> {
         to
     }
 }
+
+macro_rules! impl_render_through_display {
+    ($($type:ty)+) => {$(
+        impl Render for $type {
+            fn render(self, to: String) -> String {
+                self.to_string().render(to)
+            }
+        }
+    )+};
+}
+
+impl_render_through_display!(u8 i8 u16 i16 u32 i32 u64 i64 u128 i128 usize isize);

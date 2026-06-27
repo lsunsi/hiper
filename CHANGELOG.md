@@ -3,6 +3,7 @@
 ## [Unreleased]
 - **Added**: Raw struct (to bypass escaping)
 - **Added**: DOCTYPE const (just a Raw for convenience)
+- **Added**: Add Render impl for all numbers through display
 - **Changed**: Move semantics on expression closure
 
 ## [0.2.0](https://codeberg.org/lsunsi/hiper/src/tag/0.2.0)

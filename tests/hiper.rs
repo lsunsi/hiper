@@ -25,6 +25,12 @@ fn render_string_escape() {
 }
 
 #[test]
+fn render_numbers() {
+    let h = html! { (0u8)(1i8)(2u16)(3i16)(4u32)(5i32)(6u64)(7i64)(8u128)(9i128)(0usize)(1isize) };
+    assert_eq!(h(String::new()), r#"012345678901"#);
+}
+
+#[test]
 fn render_none() {
     let h = html! { (None::<&str>) }(String::new());
     assert_eq!(&h, r#""#);
