@@ -156,3 +156,16 @@ fn tag_if_false() {
     let h = html! { div[] { if (false) { p[] { "oiblz" } } } }(String::new());
     assert_eq!(&h, r#"<div></div>"#);
 }
+
+#[test]
+fn tag_if_true_else() {
+    let h = html! { div[] { if (true) { p[] { "oi" } } else { span[] { "blz" } } } }(String::new());
+    assert_eq!(&h, r#"<div><p>oi</p></div>"#);
+}
+
+#[test]
+fn tag_if_false_else() {
+    let h =
+        html! { div[] { if (false) { p[] { "oi" } } else { span[] { "blz" } } } }(String::new());
+    assert_eq!(&h, r#"<div><span>blz</span></div>"#);
+}
