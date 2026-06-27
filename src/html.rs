@@ -35,6 +35,12 @@ macro_rules! html {
         }
     };
 
+    (if let $cond:pat = $target:ident { $($itt:tt)* } else { $($ett:tt)* }) => {
+        |s| if let $cond = $target { $crate::html!($($itt)*)(s) } else { $crate::html!($($ett)*)(s) }
+    };
+    (if let $cond:pat = $target:ident { $($itt:tt)* }) => {
+        |s| if let $cond = $target { $crate::html!($($itt)*)(s) } else { s }
+    };
     (if ($cond:expr) { $($itt:tt)* } else { $($ett:tt)* }) => {
         if $cond { $crate::html!($($itt)*) } else { $crate::html!($($ett)*) }
     };

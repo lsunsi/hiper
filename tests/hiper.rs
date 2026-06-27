@@ -169,3 +169,31 @@ fn tag_if_false_else() {
         html! { div[] { if (false) { p[] { "oi" } } else { span[] { "blz" } } } }(String::new());
     assert_eq!(&h, r#"<div><span>blz</span></div>"#);
 }
+
+#[test]
+fn tag_if_let_true() {
+    let text = Some("oiblz");
+    let h = html! { div[] { if let Some(a) = text { p[] { (a) } } } }(String::new());
+    assert_eq!(&h, r#"<div><p>oiblz</p></div>"#);
+}
+
+#[test]
+fn tag_if_let_false() {
+    let text = None::<&str>;
+    let h = html! { div[] { if let Some(a) = text { p[] { (a) } } } }(String::new());
+    assert_eq!(&h, r#"<div></div>"#);
+}
+
+#[test]
+fn tag_if_let_true_else() {
+    let text = Some("oi");
+    let h = html! { div[] { if let Some(a) = text { p[] { (a) } } else { "blz" } } }(String::new());
+    assert_eq!(&h, r#"<div><p>oi</p></div>"#);
+}
+
+#[test]
+fn tag_if_let_false_else() {
+    let text = None::<&str>;
+    let h = html! { div[] { if let Some(a) = text { p[] { (a) } } else { "blz" } } }(String::new());
+    assert_eq!(&h, r#"<div>blz</div>"#);
+}
