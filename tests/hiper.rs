@@ -144,3 +144,15 @@ fn tag_nested_render_expr() {
     let h = html! { div[] { (render_user("carlos")) } }(String::new());
     assert_eq!(&h, r#"<div><p>carlos</p></div>"#);
 }
+
+#[test]
+fn tag_if_true() {
+    let h = html! { div[] { if (true) { p[] { "oiblz" } } } }(String::new());
+    assert_eq!(&h, r#"<div><p>oiblz</p></div>"#);
+}
+
+#[test]
+fn tag_if_false() {
+    let h = html! { div[] { if (false) { p[] { "oiblz" } } } }(String::new());
+    assert_eq!(&h, r#"<div></div>"#);
+}

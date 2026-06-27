@@ -35,6 +35,10 @@ macro_rules! html {
         }
     };
 
+    (if ($cond:expr) { $($tt:tt)* }) => {
+        if ($cond) { $crate::html!($($tt)*) } else { |s| s }
+    };
+
     ($c:literal $($tt:tt)*) => { |s| $crate::html!($($tt)*)($crate::Render::render($c, s)) };
     (($c:expr) $($tt:tt)*) => { |s| $crate::html!($($tt)*)($crate::Render::render($c, s)) };
 
