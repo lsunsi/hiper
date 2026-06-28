@@ -78,6 +78,13 @@ macro_rules! html {
         }
     };
 
+    (for ($p:pat in $e:expr) { $($body:tt)* } $($tt:tt)*) => {
+        |mut s| {
+            for $p in $e { s = $crate::html!($($body)*)(s); }
+            $crate::html!($($tt)*)(s)
+        }
+    };
+
     ($c:literal $($tt:tt)*) => { |s| $crate::html!($($tt)*)($crate::Render::render($c, s)) };
     (($c:expr) $($tt:tt)*) => { move |s| $crate::html!($($tt)*)($crate::Render::render($c, s)) };
 

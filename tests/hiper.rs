@@ -315,3 +315,19 @@ fn tag_empty_attr() {
         r#"<br checked><p checked></p>"#
     );
 }
+
+#[test]
+fn tag_for_tag() {
+    assert_eq!(
+        html! { ul[] { for (i in 0..2) { li[] { (i) } } } }(String::new()),
+        r#"<ul><li>0</li><li>1</li></ul>"#
+    );
+}
+
+#[test]
+fn tag_for_tag_tag() {
+    assert_eq!(
+        html! { br[]; for (i in 0..2) { li[] { (i) } } p[] {} }(String::new()),
+        r#"<br><li>0</li><li>1</li><p></p>"#
+    );
+}

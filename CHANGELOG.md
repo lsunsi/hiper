@@ -7,6 +7,7 @@
 - **Added**: Else if support on if control structure
 - **Added**: Support literal tag and attribute keys (allows for kebabs)
 - **Added**: Support empty attributes (little hacky, but I'll improve it)
+- **Added**: Add for-loop construct
 - **Changed**: Move semantics on expression closure
 
 ## [0.2.0](https://codeberg.org/lsunsi/hiper/src/tag/0.2.0)

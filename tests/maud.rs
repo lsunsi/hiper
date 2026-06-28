@@ -450,24 +450,23 @@ mod control_structures {
     }
 
     #[test]
-    #[ignore]
     fn looping_with_for() {
-        unimplemented!();
-        // assert_tmpl!({
-        //     p { "My favorite ponies are:" }
-        //     ol {
-        //         @for name in &names {
-        //             li { (name) }
-        //         }
-        //     }
-        // }, {
-        //     p { "My favorite ponies are:" }
-        //     ol {
-        //         @for name in &names {
-        //             li { (name) }
-        //         }
-        //     }
-        // });
+        let names = ["Applejack", "Rarity", "Fluttershy"];
+        assert_tmpl!({
+            p { "My favorite ponies are:" }
+            ol {
+                @for name in &names {
+                    li { (name) }
+                }
+            }
+        }, {
+            p[] { "My favorite ponies are:" }
+            ol[] {
+                for (name in names) {
+                    li[] { (name) }
+                }
+            }
+        });
     }
 
     #[test]
