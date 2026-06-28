@@ -389,6 +389,23 @@ fn tag_id_ident() {
 }
 
 #[test]
+fn tag_id_literal() {
+    assert_eq!(
+        html! { p # "first-user"[] {} br # "sep"[]; }(String::new()),
+        r#"<p id="first-user"></p><br id="sep">"#
+    );
+}
+
+#[test]
+fn tag_id_expr() {
+    let base = "user";
+    assert_eq!(
+        html! { p #(base)[] {} br #(base.to_string() + "2")[]; }(String::new()),
+        r#"<p id="user"></p><br id="user2">"#
+    );
+}
+
+#[test]
 fn tag_class_ident() {
     assert_eq!(
         html! { p.red[] {} br.blue[]; }(String::new()),
@@ -409,13 +426,5 @@ fn tag_id_and_classes_ident() {
     assert_eq!(
         html! { div #br.green.yellow[] {} }(String::new()),
         r#"<div id="br" class="green yellow"></div>"#
-    );
-}
-
-#[test]
-fn tag_id_literal() {
-    assert_eq!(
-        html! { p # "first-user"[] {} br # "sep"[]; }(String::new()),
-        r#"<p id="first-user"></p><br id="sep">"#
     );
 }

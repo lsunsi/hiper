@@ -135,6 +135,14 @@ macro_rules! html {
             s
         }
     };
+    (@i ($i:expr)) => {
+        |mut s| {
+            s += " id=\"";
+            s += &$i as &str;
+            s += "\"";
+            s
+        }
+    };
 
     (@kv $k:tt=$v:tt $($tt:tt)*) => {
         |mut s| {
