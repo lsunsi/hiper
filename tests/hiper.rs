@@ -431,17 +431,18 @@ fn tag_class_expr() {
 }
 
 #[test]
-fn tag_classes_ident() {
+fn tag_class_mixed() {
+    let kind = "button";
     assert_eq!(
-        html! { p.red.blue[] { br.blue.red[]; } }(String::new()),
-        r#"<p class="red blue"><br class="blue red"></p>"#
+        html! { p.red."mx-auto".(kind)[] {} }(String::new()),
+        r#"<p class="red mx-auto button"></p>"#
     );
 }
 
 #[test]
 fn tag_id_and_classes_ident() {
     assert_eq!(
-        html! { div #br.green.yellow[] {} }(String::new()),
-        r#"<div id="br" class="green yellow"></div>"#
+        html! { div #br.green."yellow-ish"[] {} }(String::new()),
+        r#"<div id="br" class="green yellow-ish"></div>"#
     );
 }
