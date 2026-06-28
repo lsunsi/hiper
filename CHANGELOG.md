@@ -1,6 +1,8 @@
 # Changelog
 
 ## [Unreleased]
+
+## [0.4.0](https://codeberg.org/lsunsi/hiper/src/tag/0.4.0)
 - **Added**: Support let tag for inline declarations
 - **Added**: Support match statements
 - **Added**: Support id shorthand (#)
