@@ -1,6 +1,6 @@
 #[macro_export]
 macro_rules! html {
-    ($t:tt$(#$i:ident)?[$($kv:tt)*]; $($tt:tt)*) => {
+    ($t:tt$(#$i:ident)?$(.$c:ident)?[$($kv:tt)*]; $($tt:tt)*) => {
         |mut s| {
             s += "<";
             s += $crate::html!(@t $t);
@@ -9,13 +9,18 @@ macro_rules! html {
                 s += stringify!($i);
                 s += "\"";
             )?
+            $(
+                s += " class=\"";
+                s += stringify!($c);
+                s += "\"";
+            )?
             s = $crate::html!(@kv $($kv)*)(s);
             s += ">";
             s = $crate::html!($($tt)*)(s);
             s
         }
     };
-    ($t:tt$(#$i:ident)?[$($kv:tt)*] { $($c:tt)* } $($tt:tt)*) => {
+    ($t:tt$(#$i:ident)?$(.$c:ident)?[$($kv:tt)*] { $($b:tt)* } $($tt:tt)*) => {
         move |mut s| {
             s += "<";
             s += $crate::html!(@t $t);
@@ -24,9 +29,14 @@ macro_rules! html {
                 s += stringify!($i);
                 s += "\"";
             )?
+            $(
+                s += " class=\"";
+                s += stringify!($c);
+                s += "\"";
+            )?
             s = $crate::html!(@kv $($kv)*)(s);
             s += ">";
-            s = $crate::html!($($c)*)(s);
+            s = $crate::html!($($b)*)(s);
             s += "</";
             s += $crate::html!(@t $t);
             s += ">";

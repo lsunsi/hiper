@@ -387,3 +387,11 @@ fn tag_id() {
         r#"<p id="user"></p><br id="sep">"#
     );
 }
+
+#[test]
+fn tag_class() {
+    assert_eq!(
+        html! { p.red[] {} br.blue[]; }(String::new()),
+        r#"<p class="red"></p><br class="blue">"#
+    );
+}
