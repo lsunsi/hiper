@@ -32,6 +32,13 @@ macro_rules! html {
         }
     };
 
+    (match ($e:expr) { $($p:pat => {$($b:tt)*}),+ } $($tt:tt)*) => {
+        |mut s| {
+            match $e { $($p => s = $crate::html!($($b)*)(s),)+ }
+            $crate::html!($($tt)*)(s)
+        }
+    };
+
     (if let $cond:pat = $target:ident { $($itt:tt)* } else { $($ett:tt)* } $($tt:tt)*) => {
         |s| $crate::html!($($tt)*)(
             (if let $cond = $target { $crate::html!($($itt)*)(s) } else { $crate::html!($($ett)*)(s) })

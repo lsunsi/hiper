@@ -513,42 +513,46 @@ mod control_structures {
     }
 
     #[test]
-    #[ignore]
     fn matching_with_match() {
-        unimplemented!();
-        // enum Princess { Celestia, Luna, Cadance, TwilightSparkle }
-        // let user = Princess::Celestia;
-        // assert_tmpl!({
-        //     @match user {
-        //         Princess::Luna => {
-        //             h1 { "Super secret woona to-do list" }
-        //             ul {
-        //                 li { "Nuke the Crystal Empire" }
-        //                 li { "Kick a puppy" }
-        //                 li { "Evil laugh" }
-        //             }
-        //         },
-        //         Princess::Celestia => {
-        //             p { "Sister, please stop reading my diary. It's rude." }
-        //         },
-        //         _ => p { "Nothing to see here; move along." }
-        //     }
-        // }, {
-        //     @match user {
-        //         Princess::Luna => {
-        //             h1 { "Super secret woona to-do list" }
-        //             ul {
-        //                 li { "Nuke the Crystal Empire" }
-        //                 li { "Kick a puppy" }
-        //                 li { "Evil laugh" }
-        //             }
-        //         },
-        //         Princess::Celestia => {
-        //             p { "Sister, please stop reading my diary. It's rude." }
-        //         },
-        //         _ => p { "Nothing to see here; move along." }
-        //     }
-        // });
+        #[allow(dead_code, reason = "used to match")]
+        enum Princess {
+            Celestia,
+            Luna,
+            Cadance,
+            TwilightSparkle,
+        }
+        let user = Princess::Celestia;
+        assert_tmpl!({
+            @match user {
+                Princess::Luna => {
+                    h1 { "Super secret woona to-do list" }
+                    ul {
+                        li { "Nuke the Crystal Empire" }
+                        li { "Kick a puppy" }
+                        li { "Evil laugh" }
+                    }
+                },
+                Princess::Celestia => {
+                    p { "Sister, please stop reading my diary. Its rude." }
+                },
+                _ => p { "Nothing to see here; move along." }
+            }
+        }, {
+            match (user) {
+                Princess::Luna => {
+                    h1[] { "Super secret woona to-do list" }
+                    ul[] {
+                        li[] { "Nuke the Crystal Empire" }
+                        li[] { "Kick a puppy" }
+                        li[] { "Evil laugh" }
+                    }
+                },
+                Princess::Celestia => {
+                    p[] { "Sister, please stop reading my diary. Its rude." }
+                },
+                _ => { p[] { "Nothing to see here; move along." } }
+            }
+        });
     }
 }
 

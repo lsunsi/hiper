@@ -357,3 +357,25 @@ fn tag_let_tag() {
         r#"<p>2!</p>"#
     );
 }
+
+#[test]
+fn tag_match_tag() {
+    enum Carlos {
+        Roberto,
+        Marcos,
+    }
+    let carlos = Carlos::Marcos;
+    let h = html! {
+        match (carlos) {
+            Carlos::Roberto=> { "roberto" },
+            Carlos::Marcos=> { strong[] { "marcos" } }
+        }
+        "!"
+        match (Carlos::Roberto) {
+            Carlos::Roberto=> { "roberto" },
+            Carlos::Marcos=> { strong[] { "marcos" } }
+        }
+        "?"
+    };
+    assert_eq!(h(String::new()), r#"<strong>marcos</strong>!roberto?"#);
+}
