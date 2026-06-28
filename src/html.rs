@@ -95,6 +95,21 @@ macro_rules! html {
         }
     };
 
+    ($fn:ident($($args:tt)*); $($tt:tt)*) => {
+        move |mut s| {
+            s = $crate::Render::render($fn($($args)*), s);
+            s = $crate::html!($($tt)*)(s);
+            s
+        }
+    };
+    ($fn:ident($($args:tt)*) { $($children:tt)* } $($tt:tt)*) => {
+        |mut s| {
+            s = $crate::Render::render($fn($($args)*, $crate::html!($($children)*)), s);
+            s = $crate::html!($($tt)*)(s);
+            s
+        }
+    };
+
     ($c:literal $($tt:tt)*) => { |s| $crate::html!($($tt)*)($crate::Render::render($c, s)) };
     (($c:expr) $($tt:tt)*) => { move |s| $crate::html!($($tt)*)($crate::Render::render($c, s)) };
 

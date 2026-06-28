@@ -598,10 +598,10 @@ mod partials {
 
             pub(super) fn page(title: &str, greeting: impl hiper::Render) -> impl hiper::Render {
                 hiper::html! {
-                    (header(title))
+                    header(title);
                     h1[] { (title) }
                     (greeting)
-                    (footer())
+                    footer();
                 }
             }
         }
@@ -622,6 +622,25 @@ mod partials {
                         div[] { "Greetings, Maud." }
                     },
                 ))
+            }
+        );
+
+        let maud_page = m::page;
+        let hiper_page = h::page;
+
+        assert_tmpl!(
+            {
+                (maud_page(
+                    "Hello!",
+                    maud::html! {
+                        div { "Greetings, Maud." }
+                    },
+                ))
+            },
+            {
+                hiper_page("Hello!") {
+                    div[] { "Greetings, Maud." }
+                }
             }
         );
     }

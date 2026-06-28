@@ -161,6 +161,59 @@ fn tag_nested_render_expr() {
 }
 
 #[test]
+fn tag_component_render_empty() {
+    let navbar = || html! { nav[] { } };
+    assert_eq!(html! { navbar(); }(String::new()), r#"<nav></nav>"#);
+}
+
+#[test]
+fn tag_component_render_children() {
+    fn layout(class: &str, children: impl Render) -> impl Render {
+        html! {
+            main.(class)[] {
+                (children)
+            }
+        }
+    }
+
+    let h = html! {
+        layout("dark") { p[] { "content" } }
+    };
+
+    assert_eq!(
+        h(String::new()),
+        r#"<main class="dark"><p>content</p></main>"#
+    );
+}
+
+#[test]
+fn tag_component_followed() {
+    fn layout(class: &str, children: impl Render) -> impl Render {
+        html! {
+            main.(class)[] {
+                (children)
+            }
+        }
+    }
+
+    fn navbar() -> impl Render {
+        html! { nav[] { } }
+    }
+
+    let h = html! {
+        layout("dark") {
+            navbar();
+            p[] { "content"   }
+        }
+        footer[] {}
+    };
+    assert_eq!(
+        h(String::new()),
+        r#"<main class="dark"><nav></nav><p>content</p></main><footer></footer>"#
+    );
+}
+
+#[test]
 fn tag_if_true() {
     let h = html! { div[] { if (true) { p[] { "oiblz" } } } };
     assert_eq!(h(String::new()), r#"<div><p>oiblz</p></div>"#);

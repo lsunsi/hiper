@@ -5,6 +5,7 @@
 - **Added**: Support match statements
 - **Added**: Support id shorthand (#)
 - **Added**: Support class shorthand (.)
+- **Added**: Support component rendering syntax
 
 ## [0.3.0](https://codeberg.org/lsunsi/hiper/src/tag/0.3.0)
 - **Added**: Raw struct (to bypass escaping)
