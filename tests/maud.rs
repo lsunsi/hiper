@@ -209,20 +209,19 @@ mod elements_and_attributes {
     }
 
     #[test]
-    #[ignore]
     fn implicit_div_elements() {
-        unimplemented!()
-        // assert_tmpl!({
-        //     #main {
-        //         "Main content!"
-        //         .tip { "Storing food in a refrigerator can make it 20% cooler." }
-        //     }
-        // }, {
-        //     #main {
-        //         "Main content!"
-        //         .tip { "Storing food in a refrigerator can make it 20% cooler." }
-        //     }
-        // });
+        // no support for implicit divs
+        assert_tmpl!({
+            #main {
+                "Main content!"
+                .tip { "Storing food in a refrigerator can make it 20% cooler." }
+            }
+        }, {
+            div #main[] {
+                "Main content!"
+                div.tip[] { "Storing food in a refrigerator can make it 20% cooler." }
+            }
+        });
     }
 }
 
