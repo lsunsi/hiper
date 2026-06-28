@@ -293,7 +293,15 @@ fn tag_if_let_else_tag() {
 }
 
 #[test]
-fn tag_attr_literal() {
+fn tag_literal() {
+    assert_eq!(
+        html! { "web-comp"[] {} "comp-web"[]; }(String::new()),
+        r#"<web-comp></web-comp><comp-web>"#
+    );
+}
+
+#[test]
+fn tag_attr_key_literal() {
     assert_eq!(
         html! { div["hx-get" = "/"] {} br["hx-post" = "/"]; }(String::new()),
         r#"<div hx-get="/"></div><br hx-post="/">"#

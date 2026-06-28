@@ -129,17 +129,17 @@ mod elements_and_attributes {
 
     #[test]
     fn custom_elements_and_data_attributes() {
-        // assert_tmpl!({
-        //     article data-index="12345" {
-        //         h1 { "My blog" }
-        //         tag-cloud { "pinkie pie pony cute" }
-        //     }
-        // }, {
-        //     article["data-index"="12345"] {
-        //         h1[] { "My blog" }
-        //         tag-cloud[] { "pinkie pie pony cute" }
-        //     }
-        // });
+        assert_tmpl!({
+            article data-index="12345" {
+                h1 { "My blog" }
+                tag-cloud { "pinkie pie pony cute" }
+            }
+        }, {
+            article["data-index"="12345"] {
+                h1[] { "My blog" }
+                "tag-cloud"[] { "pinkie pie pony cute" }
+            }
+        });
     }
 
     #[test]

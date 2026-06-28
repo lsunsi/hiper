@@ -5,7 +5,7 @@
 - **Added**: DOCTYPE const (just a Raw for convenience)
 - **Added**: Add Render impl for all numbers through display
 - **Added**: Else if support on if control structure
-- **Added**: Support literal tag attribute keys
+- **Added**: Support literal tag and attribute keys (allows for kebabs)
 - **Changed**: Move semantics on expression closure
 
 ## [0.2.0](https://codeberg.org/lsunsi/hiper/src/tag/0.2.0)
