@@ -154,22 +154,6 @@ macro_rules! html {
     (@c $c:ident) => { |s| s + stringify!($c) };
     (@c ($c:expr)) => { |s| s + &$c as &str };
 
-    (@c ($($c:expr)*)) => {
-        |mut s| {
-            let cs: &[&str] = &[$(stringify!($c),)*];
-            if !cs.is_empty() {
-                s += " class=\"";
-                $(
-                    s += &$c as &str;
-                    s += " ";
-                )*
-                String::pop(&mut s);
-                s += "\"";
-            }
-            s
-        }
-    };
-
     (@kv $k:tt=$v:tt $($tt:tt)*) => {
         |mut s| {
             s += " ";
