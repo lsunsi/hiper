@@ -346,23 +346,21 @@ mod splices_and_toggles {
     }
 
     #[test]
-    #[ignore]
     fn toggles_base() {
-        unimplemented!();
-        // let allow_editing = true;
-        // assert_tmpl!({
-        //     p contenteditable[allow_editing] {
-        //         "Edit me, I "
-        //         em { "dare" }
-        //         " you."
-        //     }
-        // }, {
-        //     p contenteditable[allow_editing] {
-        //         "Edit me, I "
-        //         em { "dare" }
-        //         " you."
-        //     }
-        // });
+        let allow_editing = true;
+        assert_tmpl!({
+            p contenteditable[allow_editing] {
+                "Edit me, I "
+                em { "dare" }
+                " you."
+            }
+        }, {
+            p[contenteditable[allow_editing]] {
+                "Edit me, I "
+                em[] { "dare" }
+                " you."
+            }
+        });
     }
 
     #[test]

@@ -331,3 +331,21 @@ fn tag_for_tag_tag() {
         r#"<br><li>0</li><li>1</li><p></p>"#
     );
 }
+
+#[test]
+fn tag_toggle_attr_true() {
+    let editable = true;
+    assert_eq!(
+        html! { p[contenteditable[editable]] {} }(String::new()),
+        r#"<p contenteditable></p>"#
+    );
+}
+
+#[test]
+fn tag_toggle_attr_false() {
+    let editable = false;
+    assert_eq!(
+        html! { p[contenteditable[editable]] {} }(String::new()),
+        r#"<p></p>"#
+    );
+}
