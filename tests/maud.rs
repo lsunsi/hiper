@@ -174,22 +174,20 @@ mod elements_and_attributes {
     }
 
     #[test]
-    #[ignore]
     fn empty_attributes() {
-        unimplemented!()
-        // assert_tmpl!({
-        //     form {
-        //         input type="checkbox" name="cupcakes" checked;
-        //         " "
-        //         label for="cupcakes" { "Do you like cupcakes?" }
-        //     }
-        // }, {
-        //     form[] {
-        //         input[type="checkbox" name="cupcakes" checked];
-        //         " "
-        //         label[for="cupcakes"] { "Do you like cupcakes?" }
-        //     }
-        // });
+        assert_tmpl!({
+            form {
+                input type="checkbox" name="cupcakes" checked;
+                " "
+                label for="cupcakes" { "Do you like cupcakes?" }
+            }
+        }, {
+            form[] {
+                input[type="checkbox" name="cupcakes" checked=()];
+                " "
+                label[for="cupcakes"] { "Do you like cupcakes?" }
+            }
+        });
     }
 
     #[test]

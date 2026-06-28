@@ -307,3 +307,11 @@ fn tag_attr_key_literal() {
         r#"<div hx-get="/"></div><br hx-post="/">"#
     );
 }
+
+#[test]
+fn tag_empty_attr() {
+    assert_eq!(
+        html! { br[checked=()]; p[checked=()] {} }(String::new()),
+        r#"<br checked><p checked></p>"#
+    );
+}

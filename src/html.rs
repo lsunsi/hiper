@@ -7,7 +7,6 @@ macro_rules! html {
             $(
                 s += " ";
                 s = $crate::html!(@k $k)(s);
-                s += "=";
                 s = $crate::html!(@v $v)(s);
             )*
             s += ">";
@@ -22,7 +21,6 @@ macro_rules! html {
             $(
                 s += " ";
                 s = $crate::html!(@k $k)(s);
-                s += "=";
                 s = $crate::html!(@v $v)(s);
             )*
             s += ">";
@@ -89,8 +87,9 @@ macro_rules! html {
     (@k $k:ident) => { |s| s + stringify!($k) };
     (@k $k:literal) => { |s| s + $k };
 
-    (@v $v:literal) => { |s| s + "\"" + $v + "\"" };
-    (@v ($v:expr)) => { |s| s + "\"" + $v + "\"" };
+    (@v ()) => { |s| s };
+    (@v $v:literal) => { |s| s + "=" +  "\"" + $v + "\"" };
+    (@v ($v:expr)) => { |s| s + "=" + "\"" + $v + "\"" };
 
     () => { |s| s }
 }
