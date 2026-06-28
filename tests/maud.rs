@@ -272,35 +272,31 @@ mod splices_and_toggles {
     }
 
     #[test]
-    #[ignore]
     fn splices_in_attributes_base() {
-        unimplemented!();
-        // let secret_message = "Surprise!";
-        // assert_tmpl!({
-        //     p title=(secret_message) {
-        //         "Nothing to see here, move along."
-        //     }
-        // }, {
-        //     p title=(secret_message) {
-        //         "Nothing to see here, move along."
-        //     }
-        // });
+        let secret_message = "Surprise!";
+        assert_tmpl!({
+            p title=(secret_message) {
+                "Nothing to see here, move along."
+            }
+        }, {
+            p[title=(secret_message)] {
+                "Nothing to see here, move along."
+            }
+        });
     }
 
     #[test]
-    #[ignore]
     fn splices_in_attributes_concat() {
-        unimplemented!();
-        // const GITHUB: &'static str = "https://github.com";
-        // assert_tmpl!({
-        //     a href={ (GITHUB) "/lambda-fairy/maud" } {
-        //         "Fork me on GitHub"
-        //     }
-        // }, {
-        //     a href={ (GITHUB) "/lambda-fairy/maud" } {
-        //         "Fork me on GitHub"
-        //     }
-        // });
+        const GITHUB: &str = "https://github.com";
+        assert_tmpl!({
+            a href={ (GITHUB) "/lambda-fairy/maud" } {
+                "Fork me on GitHub"
+            }
+        }, {
+            a[href=(GITHUB.to_string() + "/lambda-fairy/maud")] {
+                "Fork me on GitHub"
+            }
+        });
     }
 
     #[test]
