@@ -251,24 +251,41 @@ mod splices_and_toggles {
     }
 
     #[test]
-    #[ignore]
     fn block() {
-        unimplemented!();
-        // assert_tmpl!({
-        //     p {
-        //         ({
-        //             let f: Foo = something_convertible_to_foo()?;
-        //             f.time().format("%H%Mh")
-        //         })
-        //     }
-        // }, {
-        //     p {
-        //         ({
-        //             let f: Foo = something_convertible_to_foo()?;
-        //             f.time().format("%H%Mh")
-        //         })
-        //     }
-        // });
+        struct Foo;
+        struct FooFmt;
+
+        impl Foo {
+            fn time(self) -> FooFmt {
+                FooFmt
+            }
+        }
+
+        impl FooFmt {
+            fn format(self, _: &str) -> &'static str {
+                "oiblz"
+            }
+        }
+
+        fn something_convertible_to_foo() -> Foo {
+            Foo
+        }
+
+        assert_tmpl!({
+            p {
+                ({
+                    let f: Foo = something_convertible_to_foo();
+                    f.time().format("%H%Mh")
+                })
+            }
+        }, {
+            p[] {
+                ({
+                    let f: Foo = something_convertible_to_foo();
+                    f.time().format("%H%Mh")
+                })
+            }
+        });
     }
 
     #[test]
