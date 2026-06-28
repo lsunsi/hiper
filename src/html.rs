@@ -35,28 +35,49 @@ macro_rules! html {
         }
     };
 
-    (if let $cond:pat = $target:ident { $($itt:tt)* } else { $($ett:tt)* }) => {
-        |s| if let $cond = $target { $crate::html!($($itt)*)(s) } else { $crate::html!($($ett)*)(s) }
+    (if let $cond:pat = $target:ident { $($itt:tt)* } else { $($ett:tt)* } $($tt:tt)*) => {
+        |s| $crate::html!($($tt)*)(
+            (if let $cond = $target { $crate::html!($($itt)*)(s) } else { $crate::html!($($ett)*)(s) })
+        )
     };
-    (if let $cond:pat = $target:ident { $($itt:tt)* }) => {
-        |s| if let $cond = $target { $crate::html!($($itt)*)(s) } else { s }
+    (if let $cond:pat = $target:ident { $($itt:tt)* } $($tt:tt)*) => {
+        |s| $crate::html!($($tt)*)(
+            if let $cond = $target { $crate::html!($($itt)*)(s) } else { s }
+        )
     };
 
-    (if ($icond:expr) { $($ifbody:tt)* } $(else if ($eicond:expr) { $($eibody:tt)* })+ else { $($ebody:tt)* }) => {
-        if $icond { $crate::html!($($ifbody)*) }
-        $(else if $eicond { $crate::html!($($eibody)*) })+
-        else { $crate::html!($($ebody)*) }
+    (if ($icond:expr) { $($ifbody:tt)* } $(else if ($eicond:expr) { $($eibody:tt)* })+ else { $($ebody:tt)* } $($tt:tt)*) => {
+        |s| {
+            $crate::html!($($tt)*)(
+                (if $icond { $crate::html!($($ifbody)*) }
+                $(else if $eicond { $crate::html!($($eibody)*) })+
+                else { $crate::html!($($ebody)*) })(s)
+            )
+        }
     };
-    (if ($icond:expr) { $($ifbody:tt)* } $(else if ($eicond:expr) { $($eibody:tt)* })+) => {
-        if $icond { $crate::html!($($ifbody)*) }
-        $(else if $eicond { $crate::html!($($eibody)*) })+
-        else { |s| s }
+    (if ($icond:expr) { $($ifbody:tt)* } $(else if ($eicond:expr) { $($eibody:tt)* })+; $($tt:tt)*) => {
+        |s| {
+            $crate::html!($($tt)*)(
+                (if $icond { $crate::html!($($ifbody)*) }
+                $(else if $eicond { $crate::html!($($eibody)*) })+
+                else { |s| s })(s)
+            )
+        }
     };
-    (if ($icond:expr) { $($ibody:tt)* } else { $($ebody:tt)* }) => {
-        if $icond { $crate::html!($($ibody)*) } else { $crate::html!($($ebody)*) }
+    (if ($icond:expr) { $($ibody:tt)* } else { $($ebody:tt)* } $($tt:tt)*) => {
+        |s| {
+            $crate::html!($($tt)*)(
+                (if $icond { $crate::html!($($ibody)*) }
+                else { $crate::html!($($ebody)*) })(s)
+            )
+        }
     };
-    (if ($icond:expr) { $($ibody:tt)* }) => {
-        if $icond { $crate::html!($($ibody)*) } else { |s| s }
+    (if ($icond:expr) { $($ibody:tt)* } $($tt:tt)*) => {
+        |s| {
+            $crate::html!($($tt)*)(
+                (if $icond { $crate::html!($($ibody)*) } else { |s| s })(s)
+            )
+        }
     };
 
     ($c:literal $($tt:tt)*) => { |s| $crate::html!($($tt)*)($crate::Render::render($c, s)) };

@@ -432,31 +432,29 @@ mod control_structures {
     }
 
     #[test]
-    #[ignore]
     fn branching_with_if_and_else_let() {
-        unimplemented!();
-        // let user = Some("Pinkie Pie");
-        // assert_tmpl!({
-        //     p {
-        //         "Hello, "
-        //         @if let Some(name) = user {
-        //             (name)
-        //         } @else {
-        //             "stranger"
-        //         }
-        //         "!"
-        //     }
-        // }, {
-        //     p {
-        //         "Hello, "
-        //         @if let Some(name) = user {
-        //             (name)
-        //         } @else {
-        //             "stranger"
-        //         }
-        //         "!"
-        //     }
-        // });
+        let user = Some("Pinkie Pie");
+        assert_tmpl!({
+            p {
+                "Hello, "
+                @if let Some(name) = user {
+                    (name)
+                } @else {
+                    "stranger"
+                }
+                "!"
+            }
+        }, {
+            p[] {
+                "Hello, "
+                if let Some(name) = user {
+                    (name)
+                } else {
+                    "stranger"
+                }
+                "!"
+            }
+        });
     }
 
     #[test]

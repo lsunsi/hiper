@@ -178,45 +178,44 @@ fn tag_if_false_else() {
 
 #[test]
 fn tag_if_true_else_if() {
-    let h = html! { if (true) { "oi" } else if (false) { "blz" } };
-    assert_eq!(h(String::new()), r#"oi"#);
+    let h = html! { p[] { if (true) { "oi" } else if (false) { "blz" }; } };
+    assert_eq!(h(String::new()), r#"<p>oi</p>"#);
 }
 
 #[test]
 fn tag_if_false_else_if_true() {
-    let h = html! { if (false) { "oi" } else if (true) { "blz" } };
-    assert_eq!(h(String::new()), r#"blz"#);
+    let h = html! { p[] { if (false) { "oi" } else if (true) { "blz" }; } };
+    assert_eq!(h(String::new()), r#"<p>blz</p>"#);
 }
 
 #[test]
 fn tag_if_false_else_if_false_else_if_true() {
-    let h = html! { if (false) { "oi" } else if (false) { "blz" } else if (true) { "!" } };
-    assert_eq!(h(String::new()), r#"!"#);
+    let h = html! { p[] { if (false) { "oi" } else if (false) { "blz" } else if (true) { "!" }; } };
+    assert_eq!(h(String::new()), r#"<p>!</p>"#);
 }
 
 #[test]
 fn tag_if_false_else_if_true_else() {
-    let h = html! { if (false) { "oi" } else if (true) { "blz" } else { "!" } };
-    assert_eq!(h(String::new()), r#"blz"#);
+    let h = html! { p[] { if (false) { "oi" } else if (true) { "blz" } else { "!" } } };
+    assert_eq!(h(String::new()), r#"<p>blz</p>"#);
 }
 
 #[test]
 fn tag_if_false_else_if_false_else() {
-    let h = html! { if (false) { "oi" } else if (false) { "blz" } else { "!" } };
-    assert_eq!(h(String::new()), r#"!"#);
+    let h = html! { p[] { if (false) { "oi" } else if (false) { "blz" } else { "!" } } };
+    assert_eq!(h(String::new()), r#"<p>!</p>"#);
 }
 
 #[test]
 fn tag_if_false_else_if_false_else_if_true_else() {
-    let h =
-        html! { if (false) { "oi" } else if (false) { "blz" } else if (true) { "!" } else { "." } };
-    assert_eq!(h(String::new()), r#"!"#);
+    let h = html! { p[] { if (false) { "oi" } else if (false) { "blz" } else if (true) { "!" } else { "." } } };
+    assert_eq!(h(String::new()), r#"<p>!</p>"#);
 }
 
 #[test]
 fn tag_if_false_else_if_false_else_if_false_else() {
-    let h = html! { if (false) { "oi" } else if (false) { "blz" } else if (false) { "!" } else { "." } };
-    assert_eq!(h(String::new()), r#"."#);
+    let h = html! { p[] { if (false) { "oi" } else if (false) { "blz" } else if (false) { "!" } else { "." } } };
+    assert_eq!(h(String::new()), r#"<p>.</p>"#);
 }
 
 #[test]
@@ -245,4 +244,42 @@ fn tag_if_let_false_else() {
     let text = None::<&str>;
     let h = html! { div[] { if let Some(a) = text { p[] { (a) } } else { "blz" } } }(String::new());
     assert_eq!(&h, r#"<div>blz</div>"#);
+}
+
+#[test]
+fn tag_if_tag() {
+    let h = html! { p[] {} if (true) { "oiblz" } br[]; }(String::new());
+    assert_eq!(&h, r#"<p></p>oiblz<br>"#);
+}
+
+#[test]
+fn tag_if_else_tag() {
+    let h = html! { p[] {} if (true) { "oi" } else if (false) { "blz" }; br[]; }(String::new());
+    assert_eq!(&h, r#"<p></p>oi<br>"#);
+}
+
+#[test]
+fn tag_if_else_if_tag() {
+    let h = html! { p[] {} if (true) { "oi" } else { "blz" } br[]; }(String::new());
+    assert_eq!(&h, r#"<p></p>oi<br>"#);
+}
+
+#[test]
+fn tag_if_else_if_else_tag() {
+    let h = html! { p[] {} if (true) { "oi" } else if (false) { "blz" } else { "!" } br[]; };
+    assert_eq!(h(String::new()), r#"<p></p>oi<br>"#);
+}
+
+#[test]
+fn tag_if_let_tag() {
+    let text = Some("oiblz");
+    let h = html! { p[] {} if let Some(a) = text { (a) } br[]; };
+    assert_eq!(h(String::new()), r#"<p></p>oiblz<br>"#);
+}
+
+#[test]
+fn tag_if_let_else_tag() {
+    let text = None::<&str>;
+    let h = html! { p[] {} if let Some(a) = text { (a) } else { "oiblz" } br[]; };
+    assert_eq!(h(String::new()), r#"<p></p>oiblz<br>"#);
 }
