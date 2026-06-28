@@ -1,14 +1,10 @@
 #[macro_export]
 macro_rules! html {
-    ($t:tt$(#$i:ident)?$(.$c:ident)*[$($kv:tt)*]; $($tt:tt)*) => {
+    ($t:tt$(#$i:tt)?$(.$c:ident)*[$($kv:tt)*]; $($tt:tt)*) => {
         |mut s| {
             s += "<";
             s += $crate::html!(@t $t);
-            $(
-                s += " id=\"";
-                s += stringify!($i);
-                s += "\"";
-            )?
+            $(s = $crate::html!(@i $i)(s))?;
             let cs: &[&str] = &[$(stringify!($c),)*];
             if !cs.is_empty() {
                 s += " class=\"";
@@ -25,15 +21,11 @@ macro_rules! html {
             s
         }
     };
-    ($t:tt$(#$i:ident)?$(.$c:ident)*[$($kv:tt)*] { $($b:tt)* } $($tt:tt)*) => {
+    ($t:tt$(#$i:tt)?$(.$c:ident)*[$($kv:tt)*] { $($b:tt)* } $($tt:tt)*) => {
         move |mut s| {
             s += "<";
             s += $crate::html!(@t $t);
-            $(
-                s += " id=\"";
-                s += stringify!($i);
-                s += "\"";
-            )?
+            $(s = $crate::html!(@i $i)(s))?;
             let cs: &[&str] = &[$(stringify!($c),)*];
             if !cs.is_empty() {
                 s += " class=\"";
@@ -126,6 +118,23 @@ macro_rules! html {
 
     (@t $t:ident) => { stringify!($t) };
     (@t $t:literal) => { $t };
+
+    (@i $i:ident) => {
+        |mut s| {
+            s += " id=\"";
+            s += stringify!($i);
+            s += "\"";
+            s
+        }
+    };
+    (@i $i:literal) => {
+        |mut s| {
+            s += " id=\"";
+            s += $i;
+            s += "\"";
+            s
+        }
+    };
 
     (@kv $k:tt=$v:tt $($tt:tt)*) => {
         |mut s| {

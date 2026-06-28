@@ -381,7 +381,7 @@ fn tag_match_tag() {
 }
 
 #[test]
-fn tag_id() {
+fn tag_id_ident() {
     assert_eq!(
         html! { p #user[] {} br #sep[]; }(String::new()),
         r#"<p id="user"></p><br id="sep">"#
@@ -389,7 +389,7 @@ fn tag_id() {
 }
 
 #[test]
-fn tag_class() {
+fn tag_class_ident() {
     assert_eq!(
         html! { p.red[] {} br.blue[]; }(String::new()),
         r#"<p class="red"></p><br class="blue">"#
@@ -397,7 +397,7 @@ fn tag_class() {
 }
 
 #[test]
-fn tag_classes() {
+fn tag_classes_ident() {
     assert_eq!(
         html! { p.red.blue[] { br.blue.red[]; } }(String::new()),
         r#"<p class="red blue"><br class="blue red"></p>"#
@@ -405,9 +405,17 @@ fn tag_classes() {
 }
 
 #[test]
-fn tag_id_and_classes() {
+fn tag_id_and_classes_ident() {
     assert_eq!(
         html! { div #br.green.yellow[] {} }(String::new()),
         r#"<div id="br" class="green yellow"></div>"#
+    );
+}
+
+#[test]
+fn tag_id_literal() {
+    assert_eq!(
+        html! { p # "first-user"[] {} br # "sep"[]; }(String::new()),
+        r#"<p id="first-user"></p><br id="sep">"#
     );
 }
