@@ -422,6 +422,15 @@ fn tag_class_literal() {
 }
 
 #[test]
+fn tag_class_expr() {
+    let color = "red";
+    assert_eq!(
+        html! { p.(color)[] {} br.(color.to_string() + "-kindof")[]; }(String::new()),
+        r#"<p class="red"></p><br class="red-kindof">"#
+    );
+}
+
+#[test]
 fn tag_classes_ident() {
     assert_eq!(
         html! { p.red.blue[] { br.blue.red[]; } }(String::new()),
