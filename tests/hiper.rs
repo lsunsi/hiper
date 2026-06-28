@@ -414,6 +414,14 @@ fn tag_class_ident() {
 }
 
 #[test]
+fn tag_class_literal() {
+    assert_eq!(
+        html! { p."dark-red"[] {} br."light-blue"[]; }(String::new()),
+        r#"<p class="dark-red"></p><br class="light-blue">"#
+    );
+}
+
+#[test]
 fn tag_classes_ident() {
     assert_eq!(
         html! { p.red.blue[] { br.blue.red[]; } }(String::new()),

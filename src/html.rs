@@ -1,41 +1,23 @@
 #[macro_export]
 macro_rules! html {
-    ($t:tt$(#$i:tt)?$(.$c:ident)*[$($kv:tt)*]; $($tt:tt)*) => {
+    ($t:tt$(#$i:tt)?$(.$c:tt)*[$($kv:tt)*]; $($tt:tt)*) => {
         |mut s| {
             s += "<";
             s += $crate::html!(@t $t);
             $(s = $crate::html!(@i $i)(s))?;
-            let cs: &[&str] = &[$(stringify!($c),)*];
-            if !cs.is_empty() {
-                s += " class=\"";
-                $(
-                    s += stringify!($c);
-                    s += " ";
-                )*
-                String::pop(&mut s);
-                s += "\"";
-            }
+            s = $crate::html!(@c $($c)*)(s);
             s = $crate::html!(@kv $($kv)*)(s);
             s += ">";
             s = $crate::html!($($tt)*)(s);
             s
         }
     };
-    ($t:tt$(#$i:tt)?$(.$c:ident)*[$($kv:tt)*] { $($b:tt)* } $($tt:tt)*) => {
+    ($t:tt$(#$i:tt)?$(.$c:tt)*[$($kv:tt)*] { $($b:tt)* } $($tt:tt)*) => {
         move |mut s| {
             s += "<";
             s += $crate::html!(@t $t);
             $(s = $crate::html!(@i $i)(s))?;
-            let cs: &[&str] = &[$(stringify!($c),)*];
-            if !cs.is_empty() {
-                s += " class=\"";
-                $(
-                    s += stringify!($c);
-                    s += " ";
-                )*
-                String::pop(&mut s);
-                s += "\"";
-            }
+            s = $crate::html!(@c $($c)*)(s);
             s = $crate::html!(@kv $($kv)*)(s);
             s += ">";
             s = $crate::html!($($b)*)(s);
@@ -140,6 +122,37 @@ macro_rules! html {
             s += " id=\"";
             s += &$i as &str;
             s += "\"";
+            s
+        }
+    };
+
+    (@c $($c:ident)*) => {
+        |mut s| {
+            let cs: &[&str] = &[$(stringify!($c),)*];
+            if !cs.is_empty() {
+                s += " class=\"";
+                $(
+                    s += stringify!($c);
+                    s += " ";
+                )*
+                String::pop(&mut s);
+                s += "\"";
+            }
+            s
+        }
+    };
+    (@c $($c:literal)*) => {
+        |mut s| {
+            let cs: &[&str] = &[$(stringify!($c),)*];
+            if !cs.is_empty() {
+                s += " class=\"";
+                $(
+                    s += $c;
+                    s += " ";
+                )*
+                String::pop(&mut s);
+                s += "\"";
+            }
             s
         }
     };
