@@ -3,6 +3,7 @@
 ## [Unreleased]
 - **Added**: Support let tag for inline declarations
 - **Added**: Support match statements
+- **Added**: Support id shorthand (#)
 
 ## [0.3.0](https://codeberg.org/lsunsi/hiper/src/tag/0.3.0)
 - **Added**: Raw struct (to bypass escaping)

@@ -1,19 +1,29 @@
 #[macro_export]
 macro_rules! html {
-    ($t:tt[$($kv:tt)*]; $($tt:tt)*) => {
+    ($t:tt$(#$i:ident)?[$($kv:tt)*]; $($tt:tt)*) => {
         |mut s| {
             s += "<";
             s += $crate::html!(@t $t);
+            $(
+                s += " id=\"";
+                s += stringify!($i);
+                s += "\"";
+            )?
             s = $crate::html!(@kv $($kv)*)(s);
             s += ">";
             s = $crate::html!($($tt)*)(s);
             s
         }
     };
-    ($t:tt[$($kv:tt)*] { $($c:tt)* } $($tt:tt)*) => {
+    ($t:tt$(#$i:ident)?[$($kv:tt)*] { $($c:tt)* } $($tt:tt)*) => {
         move |mut s| {
             s += "<";
             s += $crate::html!(@t $t);
+            $(
+                s += " id=\"";
+                s += stringify!($i);
+                s += "\"";
+            )?
             s = $crate::html!(@kv $($kv)*)(s);
             s += ">";
             s = $crate::html!($($c)*)(s);

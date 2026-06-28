@@ -379,3 +379,11 @@ fn tag_match_tag() {
     };
     assert_eq!(h(String::new()), r#"<strong>marcos</strong>!roberto?"#);
 }
+
+#[test]
+fn tag_id() {
+    assert_eq!(
+        html! { p #user[] {} br #sep[]; }(String::new()),
+        r#"<p id="user"></p><br id="sep">"#
+    );
+}
