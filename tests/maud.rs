@@ -485,33 +485,31 @@ mod control_structures {
     }
 
     #[test]
-    #[ignore]
     fn declaring_variables_with_let() {
-        unimplemented!();
-        // let names = ["Applejack", "Rarity", "Fluttershy"];
-        // assert_tmpl!({
-        //     @for name in &names {
-        //         @let first_letter = name.chars().next().unwrap();
-        //         p {
-        //             "The first letter of "
-        //             b { (name) }
-        //             " is "
-        //             b { (first_letter) }
-        //             "."
-        //         }
-        //     }
-        // }, {
-        //     @for name in &names {
-        //         @let first_letter = name.chars().next().unwrap();
-        //         p {
-        //             "The first letter of "
-        //             b { (name) }
-        //             " is "
-        //             b { (first_letter) }
-        //             "."
-        //         }
-        //     }
-        // });
+        let names = ["Applejack", "Rarity", "Fluttershy"];
+        assert_tmpl!({
+            @for name in &names {
+                @let first_letter = name.chars().next().unwrap();
+                p {
+                    "The first letter of "
+                    b { (name) }
+                    " is "
+                    b { (first_letter) }
+                    "."
+                }
+            }
+        }, {
+            for (name in &names) {
+                let first_letter = name.chars().next().unwrap();
+                p[] {
+                    "The first letter of "
+                    b[] { (*name) }
+                    " is "
+                    b[] { (first_letter.to_string()) }
+                    "."
+                }
+            }
+        });
     }
 
     #[test]

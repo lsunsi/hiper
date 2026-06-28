@@ -349,3 +349,11 @@ fn tag_toggle_attr_false() {
         r#"<p></p>"#
     );
 }
+
+#[test]
+fn tag_let_tag() {
+    assert_eq!(
+        html! { p[] { let len = ["oi", "blz"].len(); (len) "!" } }(String::new()),
+        r#"<p>2!</p>"#
+    );
+}
