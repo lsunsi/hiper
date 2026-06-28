@@ -291,3 +291,11 @@ fn tag_if_let_else_tag() {
     let h = html! { p[] {} if let Some(a) = text { (a) } else { "oiblz" } br[]; };
     assert_eq!(h(String::new()), r#"<p></p>oiblz<br>"#);
 }
+
+#[test]
+fn tag_attr_literal() {
+    assert_eq!(
+        html! { div["hx-get" = "/"] {} br["hx-post" = "/"]; }(String::new()),
+        r#"<div hx-get="/"></div><br hx-post="/">"#
+    );
+}
