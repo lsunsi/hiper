@@ -3,8 +3,8 @@
 ## [Unreleased]
 - **Added**: Support let tag for inline declarations
 - **Added**: Support match statements
-- **Added**: Support id shorthand (#)
-- **Added**: Support class shorthand (.) **incomplete!**
+- **Added**: Support id shorthand ident (#ident)
+- **Added**: Support class shorthand ident (.ident.ident)
 
 ## [0.3.0](https://codeberg.org/lsunsi/hiper/src/tag/0.3.0)
 - **Added**: Raw struct (to bypass escaping)

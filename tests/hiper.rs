@@ -395,3 +395,19 @@ fn tag_class() {
         r#"<p class="red"></p><br class="blue">"#
     );
 }
+
+#[test]
+fn tag_classes() {
+    assert_eq!(
+        html! { p.red.blue[] { br.blue.red[]; } }(String::new()),
+        r#"<p class="red blue"><br class="blue red"></p>"#
+    );
+}
+
+#[test]
+fn tag_id_and_classes() {
+    assert_eq!(
+        html! { div #br.green.yellow[] {} }(String::new()),
+        r#"<div id="br" class="green yellow"></div>"#
+    );
+}
