@@ -191,25 +191,21 @@ mod elements_and_attributes {
     }
 
     #[test]
-    #[ignore]
     fn classes_and_ids_base() {
-        unimplemented!()
-        // assert_tmpl!({
-        //     input #cannon .big.scary.bright-red type="button" value="Launch Party Cannon";
-        // }, {
-        //     input #cannon .big.scary.bright-red type="button" value="Launch Party Cannon";
-        // });
+        assert_tmpl!({
+            input #cannon .big.scary.bright-red type="button" value="Launch Party Cannon";
+        }, {
+            input #cannon .big.scary."bright-red"[type="button" value="Launch Party Cannon"];
+        });
     }
 
     #[test]
-    #[ignore]
     fn classes_and_ids_quoted() {
-        unimplemented!()
-        // assert_tmpl!({
-        //     div."col-sm-2" { "Bootstrap column!" }
-        // }, {
-        //     div."col-sm-2" { "Bootstrap column!" }
-        // });
+        assert_tmpl!({
+            div."col-sm-2" { "Bootstrap column!" }
+        }, {
+            div."col-sm-2"[] { "Bootstrap column!" }
+        });
     }
 
     #[test]
@@ -317,20 +313,18 @@ mod splices_and_toggles {
     }
 
     #[test]
-    #[ignore]
     fn splices_in_classes_and_ids() {
-        unimplemented!();
-        // let name = "rarity";
-        // let severity = "critical";
-        // assert_tmpl!({
-        //     aside #(name) {
-        //         p.{ "color-" (severity) } { "This is the worst! Possible! Thing!" }
-        //     }
-        // }, {
-        //     aside #(name) {
-        //         p.{ "color-" (severity) } { "This is the worst! Possible! Thing!" }
-        //     }
-        // });
+        let name = "rarity";
+        let severity = "critical";
+        assert_tmpl!({
+            aside #(name) {
+                p.{ "color-" (severity) } { "This is the worst! Possible! Thing!" }
+            }
+        }, {
+            aside #(name)[] {
+                p.("color-".to_string() + severity )[] { "This is the worst! Possible! Thing!" }
+            }
+        });
     }
 
     #[test]

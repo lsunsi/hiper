@@ -4,8 +4,8 @@ macro_rules! html {
         |mut s| {
             s += "<";
             s += $crate::html!(@t $t);
-            $(s = $crate::html!(@i $i)(s);)?
             s = $crate::html!(@cs $($cs)*)(s);
+            $(s = $crate::html!(@i $i)(s);)?
             s = $crate::html!(@kv $($kv)*)(s);
             s += ">";
             s = $crate::html!($($tt)*)(s);
@@ -16,8 +16,8 @@ macro_rules! html {
         move |mut s| {
             s += "<";
             s += $crate::html!(@t $t);
-            $(s = $crate::html!(@i $i)(s))?;
             s = $crate::html!(@cs $($cs)*)(s);
+            $(s = $crate::html!(@i $i)(s))?;
             s = $crate::html!(@kv $($kv)*)(s);
             s += ">";
             s = $crate::html!($($b)*)(s);

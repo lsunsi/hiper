@@ -441,8 +441,9 @@ fn tag_class_mixed() {
 
 #[test]
 fn tag_id_and_classes_ident() {
+    let rojo = "red";
     assert_eq!(
-        html! { div #br.green."yellow-ish"[] {} }(String::new()),
-        r#"<div id="br" class="green yellow-ish"></div>"#
+        html! { div #br.green."yellow-ish"[] {} br #es.yellow.(rojo)[]; }(String::new()),
+        r#"<div class="green yellow-ish" id="br"></div><br class="yellow red" id="es">"#
     );
 }
