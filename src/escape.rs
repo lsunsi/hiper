@@ -1,4 +1,4 @@
-pub(crate) fn write(mut raw: &str, mut to: String) -> String {
+pub(crate) fn render(mut raw: &str, to: &mut String) {
     while let Some(index) = raw.find(['\'', '"', '&', '<', '>']) {
         to.push_str(&raw[..index]);
         to.push_str(match raw.as_bytes()[index] {
@@ -13,5 +13,4 @@ pub(crate) fn write(mut raw: &str, mut to: String) -> String {
     }
 
     to.push_str(raw);
-    to
 }

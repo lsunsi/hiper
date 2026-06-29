@@ -1,8 +1,9 @@
 macro_rules! assert_tmpl {
     ({$($maud:tt)+}, {$($hiper:tt)+}) => {{
         let maud = maud::html! {$($maud)+};
-        let hiper = hiper::html! {$($hiper)+};
-        assert_eq!(maud.0, hiper(String::new()));
+        let mut hiper = String::new();
+        (hiper::html! {$($hiper)+})(&mut hiper);
+        assert_eq!(maud.0, hiper);
     }};
 }
 

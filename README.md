@@ -31,4 +31,4 @@ assert_eq!(body(String::new()), r#"
 
 ## Inspirations
 - [maud](https://github.com/lambda-fairy/maud)
-- [horrowshow](https://github.com/Stebalien/horrorshow-rs)
+- [horrorshow](https://github.com/Stebalien/horrorshow-rs)

@@ -1,186 +1,185 @@
 #[macro_export]
 macro_rules! html {
     ($t:tt$(#$i:tt)?$(.$cs:tt)*[$($kv:tt)*]; $($tt:tt)*) => {
-        |mut s| {
-            s += "<";
-            s += $crate::html!(@t $t);
-            s = $crate::html!(@cs $($cs)*)(s);
-            $(s = $crate::html!(@i $i)(s);)?
-            s = $crate::html!(@kv $($kv)*)(s);
-            s += ">";
-            s = $crate::html!($($tt)*)(s);
-            s
+        |s: &mut String| {
+            s.push_str("<");
+            s.push_str($crate::html!(@t $t));
+            $crate::html!(@cs $($cs)*)(s);
+            $($crate::html!(@i $i)(s);)?
+            $crate::html!(@kv $($kv)*)(s);
+            s.push_str(">");
+            $crate::html!($($tt)*)(s);
         }
     };
     ($t:tt$(#$i:tt)?$(.$cs:tt)*[$($kv:tt)*] { $($b:tt)* } $($tt:tt)*) => {
-        move |mut s| {
-            s += "<";
-            s += $crate::html!(@t $t);
-            s = $crate::html!(@cs $($cs)*)(s);
-            $(s = $crate::html!(@i $i)(s))?;
-            s = $crate::html!(@kv $($kv)*)(s);
-            s += ">";
-            s = $crate::html!($($b)*)(s);
-            s += "</";
-            s += $crate::html!(@t $t);
-            s += ">";
-            s = $crate::html!($($tt)*)(s);
-            s
+        move |s: &mut String| {
+            s.push_str("<");
+            s.push_str($crate::html!(@t $t));
+            $crate::html!(@cs $($cs)*)(s);
+            $($crate::html!(@i $i)(s);)?
+            $crate::html!(@kv $($kv)*)(s);
+            s.push_str(">");
+            $crate::html!($($b)*)(s);
+            s.push_str("</");
+            s.push_str($crate::html!(@t $t));
+            s.push_str(">");
+            $crate::html!($($tt)*)(s);
         }
     };
 
     (let $i:ident = $e:expr; $($tt:tt)*) => {
-        |s| {
+        |s: &mut String| {
             let $i = $e;
-            $crate::html!($($tt)*)(s)
+            $crate::html!($($tt)*)(s);
         }
     };
 
     (match ($e:expr) { $($p:pat => {$($b:tt)*}),+ } $($tt:tt)*) => {
-        |mut s| {
-            match $e { $($p => s = $crate::html!($($b)*)(s),)+ }
-            $crate::html!($($tt)*)(s)
+        |s: &mut String| {
+            match $e { $($p => $crate::html!($($b)*)(s),)+ }
+            $crate::html!($($tt)*)(s);
         }
     };
 
     (if let $cond:pat = $target:ident { $($itt:tt)* } else { $($ett:tt)* } $($tt:tt)*) => {
-        |s| $crate::html!($($tt)*)(
-            (if let $cond = $target { $crate::html!($($itt)*)(s) } else { $crate::html!($($ett)*)(s) })
-        )
+        |s: &mut String| {
+            if let $cond = $target { $crate::html!($($itt)*)(s) } else { $crate::html!($($ett)*)(s) }
+            $crate::html!($($tt)*)(s);
+        }
     };
     (if let $cond:pat = $target:ident { $($itt:tt)* } $($tt:tt)*) => {
-        |s| $crate::html!($($tt)*)(
-            if let $cond = $target { $crate::html!($($itt)*)(s) } else { s }
-        )
+        |s: &mut String| {
+            if let $cond = $target { $crate::html!($($itt)*)(s) }
+            $crate::html!($($tt)*)(s);
+        }
     };
 
     (if ($icond:expr) { $($ifbody:tt)* } $(else if ($eicond:expr) { $($eibody:tt)* })+ else { $($ebody:tt)* } $($tt:tt)*) => {
-        |s| {
-            $crate::html!($($tt)*)(
-                (if $icond { $crate::html!($($ifbody)*) }
-                $(else if $eicond { $crate::html!($($eibody)*) })+
-                else { $crate::html!($($ebody)*) })(s)
-            )
+        |s: &mut String| {
+            (if $icond { $crate::html!($($ifbody)*) }
+            $(else if $eicond { $crate::html!($($eibody)*) })+
+            else { $crate::html!($($ebody)*) })(s);
+            $crate::html!($($tt)*)(s);
         }
     };
     (if ($icond:expr) { $($ifbody:tt)* } $(else if ($eicond:expr) { $($eibody:tt)* })+; $($tt:tt)*) => {
-        |s| {
-            $crate::html!($($tt)*)(
-                (if $icond { $crate::html!($($ifbody)*) }
-                $(else if $eicond { $crate::html!($($eibody)*) })+
-                else { |s| s })(s)
-            )
+        |s: &mut String| {
+            (if $icond { $crate::html!($($ifbody)*)(s); }
+            $(else if $eicond { $crate::html!($($eibody)*)(s); })+);
+            $crate::html!($($tt)*)(s);
         }
     };
     (if ($icond:expr) { $($ibody:tt)* } else { $($ebody:tt)* } $($tt:tt)*) => {
-        |s| {
-            $crate::html!($($tt)*)(
-                (if $icond { $crate::html!($($ibody)*) }
-                else { $crate::html!($($ebody)*) })(s)
-            )
+        |s: &mut String| {
+            (if $icond { $crate::html!($($ibody)*) }
+            else { $crate::html!($($ebody)*) })(s);
+            $crate::html!($($tt)*)(s);
         }
     };
     (if ($icond:expr) { $($ibody:tt)* } $($tt:tt)*) => {
-        |s| {
-            $crate::html!($($tt)*)(
-                (if $icond { $crate::html!($($ibody)*) } else { |s| s })(s)
-            )
+        |s: &mut String| {
+            (if $icond { $crate::html!($($ibody)*)(s); });
+            $crate::html!($($tt)*)(s);
         }
     };
 
     (for ($p:pat in $e:expr) { $($body:tt)* } $($tt:tt)*) => {
-        |mut s| {
-            for $p in $e { s = $crate::html!($($body)*)(s); }
-            $crate::html!($($tt)*)(s)
+        |s: &mut String| {
+            for $p in $e { $crate::html!($($body)*)(s); }
+            $crate::html!($($tt)*)(s);
         }
     };
 
     ($fn:ident($($args:tt)*); $($tt:tt)*) => {
-        move |mut s| {
-            s = $crate::Render::render($fn($($args)*), s);
-            s = $crate::html!($($tt)*)(s);
-            s
+        move |s: &mut String| {
+            $crate::Render::render($fn($($args)*), s);
+            $crate::html!($($tt)*)(s);
         }
     };
     ($fn:ident($($args:tt)*) { $($children:tt)* } $($tt:tt)*) => {
-        |mut s| {
-            s = $crate::Render::render($fn($($args)*, $crate::html!($($children)*)), s);
-            s = $crate::html!($($tt)*)(s);
-            s
+        |s: &mut String| {
+            $crate::Render::render($fn($($args)*, $crate::html!($($children)*)), s);
+            $crate::html!($($tt)*)(s);
         }
     };
 
-    ($c:literal $($tt:tt)*) => { |s| $crate::html!($($tt)*)($crate::Render::render($c, s)) };
-    (($c:expr) $($tt:tt)*) => { move |s| $crate::html!($($tt)*)($crate::Render::render($c, s)) };
+    ($c:literal $($tt:tt)*) => { |s: &mut String| {
+        $crate::Render::render($c, s);
+        $crate::html!($($tt)*)(s);
+    }};
+    (($c:expr) $($tt:tt)*) => { move |s: &mut String| {
+        $crate::Render::render($c, s);
+        $crate::html!($($tt)*)(s);
+    }};
 
     (@t $t:ident) => { stringify!($t) };
     (@t $t:literal) => { $t };
 
     (@i $i:ident) => {
-        |mut s| {
-            s += " id=\"";
-            s += stringify!($i);
-            s += "\"";
-            s
+        |s: &mut String| {
+            s.push_str(" id=\"");
+            s.push_str(stringify!($i));
+            s.push_str("\"");
         }
     };
     (@i $i:literal) => {
-        |mut s| {
-            s += " id=\"";
-            s += $i;
-            s += "\"";
-            s
+        |s: &mut String| {
+            s.push_str(" id=\"");
+            s.push_str($i);
+            s.push_str("\"");
         }
     };
     (@i ($i:expr)) => {
-        |mut s| {
-            s += " id=\"";
-            s += &$i as &str;
-            s += "\"";
-            s
+        |s: &mut String| {
+            s.push_str(" id=\"");
+            s.push_str(&$i as &str);
+            s.push_str("\"");
         }
     };
 
-    (@cs) => { |s| s };
+    (@cs) => { |s: &mut String| {} };
     (@cs $($tt:tt)*) => {
-        |mut s| {
-            s += " class=\"";
-            $(s = $crate::html!(@c $tt)(s) + " ";)*;
-            String::pop(&mut s);
-            s + "\""
+        |s: &mut String| {
+            s.push_str(" class=\"");
+            $($crate::html!(@c $tt)(s); s.push_str(" ");)*;
+            String::pop(s);
+            s.push_str("\"");
         }
     };
-    (@c $c:literal) => { |s| s + $c };
-    (@c $c:ident) => { |s| s + stringify!($c) };
-    (@c ($c:expr)) => { |s| s + &$c as &str };
+    (@c $c:literal) => { |s: &mut String| s.push_str($c) };
+    (@c $c:ident) => { |s: &mut String| s.push_str(stringify!($c)) };
+    (@c ($c:expr)) => { |s: &mut String| s.push_str(&$c as &str) };
 
     (@kv $k:tt=$v:tt $($tt:tt)*) => {
-        |mut s| {
-            s += " ";
-            s = $crate::html!(@k $k)(s);
-            s = $crate::html!(@v $v)(s);
-            s = $crate::html!(@kv $($tt)*)(s);
-            s
+        |s: &mut String| {
+            s.push_str(" ");
+            $crate::html!(@k $k)(s);
+            $crate::html!(@v $v)(s);
+            $crate::html!(@kv $($tt)*)(s);
         }
     };
     (@kv $k:tt[$ke:expr] $($tt:tt)*) => {
-        |mut s| {
+        |s: &mut String| {
             if $ke {
-                s += " ";
-                s = $crate::html!(@k $k)(s);
+                s.push_str(" ");
+                $crate::html!(@k $k)(s);
             }
-            s = $crate::html!(@kv $($tt)*)(s);
-            s
+            $crate::html!(@kv $($tt)*)(s);
         }
     };
-    (@kv) => { |s| s };
+    (@kv) => { |s: &mut String| {} };
 
-    (@k $k:ident) => { |s| s + stringify!($k) };
-    (@k $k:literal) => { |s| s + $k };
+    (@k $k:ident) => { |s: &mut String| s.push_str(stringify!($k)) };
+    (@k $k:literal) => { |s: &mut String| s.push_str($k) };
 
-    (@v ()) => { |s| s };
-    (@v $v:literal) => { |s| s + "=" +  "\"" + $v + "\"" };
-    (@v ($v:expr)) => { |s| s + "=" + "\"" + &$v as &str + "\"" };
+    (@v ()) => { |s: &mut String| {} };
+    (@v $v:literal) => { |s: &mut String| s.push_str(concat!("=", "\"", $v, "\"")) };
+    (@v ($v:expr)) => { |s: &mut String| {
+        s.push_str("=");
+        s.push_str("\"");
+        s.push_str(&$v);
+        s.push_str("\"");
+    }};
 
-    () => { |s| s }
+    () => { |s: &mut String| {} }
 }

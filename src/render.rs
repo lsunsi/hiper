@@ -1,42 +1,43 @@
 pub trait Render {
-    fn render(self, to: String) -> String;
+    fn render(self, to: &mut String);
 }
 
 impl Render for &str {
-    fn render(self, to: String) -> String {
-        crate::escape::write(self, to)
+    fn render(self, to: &mut String) {
+        crate::escape::render(self, to)
     }
 }
 
 impl Render for String {
-    fn render(self, to: String) -> String {
-        crate::escape::write(&self, to)
+    fn render(self, to: &mut String) {
+        crate::escape::render(&self, to)
     }
 }
 
 impl<T: Render> Render for Option<T> {
-    fn render(self, to: String) -> String {
-        if let Some(t) = self { t.render(to) } else { to }
+    fn render(self, to: &mut String) {
+        if let Some(t) = self {
+            t.render(to)
+        }
     }
 }
 
-impl<F: FnOnce(String) -> String> Render for F {
-    fn render(self, to: String) -> String {
+impl<F: FnOnce(&mut String)> Render for F {
+    fn render(self, to: &mut String) {
         self(to)
     }
 }
 
 impl<T: AsRef<str>> Render for crate::Raw<T> {
-    fn render(self, mut to: String) -> String {
+    fn render(self, to: &mut String) {
         to.push_str(self.0.as_ref());
-        to
     }
 }
 
 macro_rules! impl_render_through_display {
     ($($type:ty)+) => {$(
         impl Render for $type {
-            fn render(self, to: String) -> String {
+            fn render(self, to: &mut String) {
                 self.to_string().render(to)
             }
         }
