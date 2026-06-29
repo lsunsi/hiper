@@ -9,5 +9,8 @@ description = "hiperminimal rendering of hipertext through rust macros"
 keywords = ["html", "markup", "template"]
 categories = ["template-engine"]
 
+[dependencies]
+itoap = { version = "1.0.1", default-features = false, features = ["alloc"] }
+
 [dev-dependencies]
 maud = { version = "0.27.0", default-features = false }
