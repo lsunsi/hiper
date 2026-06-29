@@ -3,14 +3,14 @@
 ## [Unreleased]
 - **Changed**: Render integers through itoap for performance
 
-## [0.4.0](https://codeberg.org/lsunsi/hiper/src/tag/0.4.0)
+## [0.4.0](https://github.com/lsunsi/hiper/releases/tag/v0.4.0)
 - **Added**: Support let tag for inline declarations
 - **Added**: Support match statements
 - **Added**: Support id shorthand (#)
 - **Added**: Support class shorthand (.)
 - **Added**: Support component rendering syntax
 
-## [0.3.0](https://codeberg.org/lsunsi/hiper/src/tag/0.3.0)
+## [0.3.0](https://github.com/lsunsi/hiper/releases/tag/v0.3.0)
 - **Added**: Raw struct (to bypass escaping)
 - **Added**: DOCTYPE const (just a Raw for convenience)
 - **Added**: Add Render impl for all numbers through display
@@ -21,11 +21,11 @@
 - **Added**: Add boolean toggle for attributes
 - **Changed**: Move semantics on expression closure
 
-## [0.2.0](https://codeberg.org/lsunsi/hiper/src/tag/0.2.0)
+## [0.2.0](https://github.com/lsunsi/hiper/releases/tag/v0.2.0)
 - **Added**: 5-chars escaping to strings.
 - **Added**: if, if-else, if-let, if-let-else.
 
-## [0.1.0](https://codeberg.org/lsunsi/hiper/src/tag/0.1.0)
+## [0.1.0](https://github.com/lsunsi/hiper/releases/tag/v0.1.0)
 - **Added**: Basic functionality, macro, render trait, etc
 
 <!--
