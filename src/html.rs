@@ -5,6 +5,18 @@ macro_rules! html {
 
 #[macro_export]
 macro_rules! html2 {
+    ($s:ident;
+        $tag:ident
+        ;
+    ) => {
+        $s.push_str(concat!('<', stringify!($tag), '>'));
+    };
+    ($s:ident;
+        $tag:ident
+        {}
+    ) => {
+        $s.push_str(concat!('<', stringify!($tag), "></", stringify!($tag), '>'));
+    };
     ($s:ident; $t:tt$(#$i:tt)?$(.$cs:tt)*[$($kv:tt)*]; $($tt:tt)*) => {{
         $s.push_str("<");
         $s.push_str($crate::html2!(@t $t));
