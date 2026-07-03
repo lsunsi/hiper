@@ -53,3 +53,13 @@ fn class_ident() {
         "<a class=\"classe klass\"></a>"
     );
 }
+
+#[test]
+fn class_ident_cond() {
+    let x = 6;
+    assert_render!(
+        { a.classe[x > 5].nope[x == 5].klass[x < 9] }
+        "<a class=\"classe klass\">"
+        "<a class=\"classe klass\"></a>"
+    );
+}
