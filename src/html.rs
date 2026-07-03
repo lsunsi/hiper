@@ -8,14 +8,20 @@ macro_rules! html2 {
     ($s:ident;
         $tag:ident
         ;
+        $($sibling:tt)*
     ) => {
         $s.push_str(concat!('<', stringify!($tag), '>'));
+        $crate::html2!($s; $($sibling)*);
     };
     ($s:ident;
         $tag:ident
-        {}
+        { $($child:tt)* }
+        $($sibling:tt)*
     ) => {
-        $s.push_str(concat!('<', stringify!($tag), "></", stringify!($tag), '>'));
+        $s.push_str(concat!('<', stringify!($tag), '>'));
+        $crate::html2!($s; $($child)*);
+        $s.push_str(concat!("</", stringify!($tag), '>'));
+        $crate::html2!($s; $($sibling)*);
     };
     ($s:ident; $t:tt$(#$i:tt)?$(.$cs:tt)*[$($kv:tt)*]; $($tt:tt)*) => {{
         $s.push_str("<");
