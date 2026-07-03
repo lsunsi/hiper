@@ -44,3 +44,12 @@ fn id_expr() {
         "<a id=\"idê\"></a>"
     );
 }
+
+#[test]
+fn class_ident() {
+    assert_render!(
+        { a.classe.klass }
+        "<a class=\"classe klass\">"
+        "<a class=\"classe klass\"></a>"
+    );
+}
