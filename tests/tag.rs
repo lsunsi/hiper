@@ -82,3 +82,32 @@ fn class_literal_cond() {
         "<a class=\"classe klass\"></a>"
     );
 }
+
+#[test]
+fn class_expr() {
+    let class = "klass";
+    assert_render!(
+        { a.("CLASSE".to_lowercase()).(class) }
+        "<a class=\"classe klass\">"
+        "<a class=\"classe klass\"></a>"
+    );
+}
+
+#[test]
+fn class_expr_cond() {
+    let class = "klass";
+    assert_render!(
+        { a.("CLASSE".to_lowercase())[true].("nope")[class.is_empty()].(class)[!class.is_empty()] }
+        "<a class=\"classe klass\">"
+        "<a class=\"classe klass\"></a>"
+    );
+}
+
+#[test]
+fn class_mixed() {
+    assert_render!(
+        { a.b.c[true].("d").("e")[true]."f"."g"[true] }
+        "<a class=\"b c d e f g\">"
+        "<a class=\"b c d e f g\"></a>"
+    );
+}

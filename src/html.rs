@@ -8,26 +8,26 @@ macro_rules! html2 {
     ($s:ident;
         $tag:ident
         $(# $($idi:ident)? $($idl:literal)? $(($ide:expr))?)?
-        $(. $($classi:ident)? $($classl:literal)? $([$classicond:expr])?)*
+        $(. $($classi:ident)? $($classl:literal)? $(($classe:expr))? $([$classcond:expr])?)*
         ;
         $($sibling:tt)*
     ) => {
         $s.push_str(concat!('<', stringify!($tag)));
         $($crate::render_id!($s; $($idi)* $($idl)* $($ide)*);)*
-        $crate::render_classes!($s; @0 $($($classi)* $($classl)*, $($classicond)*;)*);
+        $crate::render_classes!($s; @0 $($($classi)* $($classl)* $($classe)*, $($classcond)*;)*);
         $s.push('>');
         $crate::html2!($s; $($sibling)*);
     };
     ($s:ident;
         $tag:ident
         $(# $($idi:ident)? $($idl:literal)? $(($ide:expr))?)?
-        $(. $($classi:ident)? $($classl:literal)? $([$classicond:expr])?)*
+        $(. $($classi:ident)? $($classl:literal)? $(($classe:expr))? $([$classcond:expr])?)*
         { $($child:tt)* }
         $($sibling:tt)*
     ) => {
         $s.push_str(concat!('<', stringify!($tag)));
         $($crate::render_id!($s; $($idi)* $($idl)* $($ide)*);)*
-        $crate::render_classes!($s; @0 $($($classi)* $($classl)*, $($classicond)*;)*);
+        $crate::render_classes!($s; @0 $($($classi)* $($classl)* $($classe)*, $($classcond)*;)*);
         $s.push('>');
         $crate::html2!($s; $($child)*);
         $s.push_str(concat!("</", stringify!($tag), '>'));
@@ -200,14 +200,26 @@ macro_rules! render_classes {
         $s.pop();
         $s.push('"');
     };
-    ($s:ident; @n $($classi:ident)? $($classl:literal)?, $classicond:expr; $($tt:tt)*) => {
-        if $classicond {
+    ($s:ident; @n $($classi:ident)? $($classl:literal)?, $classcond:expr; $($tt:tt)*) => {
+        if $classcond {
             $s.push_str(concat!($(stringify!($classi))* $($classl)*, ' '));
         }
         $crate::render_classes!($s; @n $($tt)*);
     };
     ($s:ident; @n $($classi:ident)? $($classl:literal)?,; $($tt:tt)*) => {
         $s.push_str(concat!($(stringify!($classi))* $($classl)*, ' '));
+        $crate::render_classes!($s; @n $($tt)*);
+    };
+    ($s:ident; @n $classe:expr, $classcond:expr; $($tt:tt)*) => {
+        if $classcond {
+            $s.push_str(&$classe as &str);
+            $s.push(' ');
+        }
+        $crate::render_classes!($s; @n $($tt)*);
+    };
+    ($s:ident; @n $classe:expr,; $($tt:tt)*) => {
+        $s.push_str(&$classe as &str);
+        $s.push(' ');
         $crate::render_classes!($s; @n $($tt)*);
     };
     ($s:ident; @n) => {}
