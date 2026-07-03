@@ -63,3 +63,22 @@ fn class_ident_cond() {
         "<a class=\"classe klass\"></a>"
     );
 }
+
+#[test]
+fn class_literal() {
+    assert_render!(
+        { a."classe"."klass" }
+        "<a class=\"classe klass\">"
+        "<a class=\"classe klass\"></a>"
+    );
+}
+
+#[test]
+fn class_literal_cond() {
+    let class = "klass";
+    assert_render!(
+        { a."classe"[true]."nope"[class.is_empty()]."klass"[!class.is_empty()] }
+        "<a class=\"classe klass\">"
+        "<a class=\"classe klass\"></a>"
+    );
+}
