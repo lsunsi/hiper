@@ -111,3 +111,12 @@ fn class_mixed() {
         "<a class=\"b c d e f g\"></a>"
     );
 }
+
+#[test]
+fn key_ident_value_literal() {
+    assert_render!(
+        { a href="/sobre" target="_blank" }
+        "<a href=\"/sobre\" target=\"_blank\">"
+        "<a href=\"/sobre\" target=\"_blank\"></a>"
+    );
+}
