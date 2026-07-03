@@ -7,18 +7,24 @@ macro_rules! html {
 macro_rules! html2 {
     ($s:ident;
         $tag:ident
+        $(# $($idi:ident)? $($idl:literal)? $(($ide:expr))?)?
         ;
         $($sibling:tt)*
     ) => {
-        $s.push_str(concat!('<', stringify!($tag), '>'));
+        $s.push_str(concat!('<', stringify!($tag)));
+        $($crate::render_id!($s; $($idi)* $($idl)* $($ide)*);)*
+        $s.push('>');
         $crate::html2!($s; $($sibling)*);
     };
     ($s:ident;
         $tag:ident
+        $(# $($idi:ident)? $($idl:literal)? $(($ide:expr))?)?
         { $($child:tt)* }
         $($sibling:tt)*
     ) => {
-        $s.push_str(concat!('<', stringify!($tag), '>'));
+        $s.push_str(concat!('<', stringify!($tag)));
+        $($crate::render_id!($s; $($idi)* $($idl)* $($ide)*);)*
+        $s.push('>');
         $crate::html2!($s; $($child)*);
         $s.push_str(concat!("</", stringify!($tag), '>'));
         $crate::html2!($s; $($sibling)*);
@@ -167,4 +173,16 @@ macro_rules! html2 {
     }};
 
     ($s:ident;) => {}
+}
+
+#[macro_export]
+macro_rules! render_id {
+    ($s:ident; $($idi:ident)? $($idl:literal)?) => {
+        $s.push_str(concat!(" id=\"", $(stringify!($idi))* $($idl)*, '"'));
+    };
+    ($s:ident; $ide:expr) => {
+        $s.push_str(" id=\"");
+        $s.push_str(&$ide as &str);
+        $s.push('"');
+    };
 }
