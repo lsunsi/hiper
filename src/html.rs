@@ -7,7 +7,9 @@ macro_rules! html {
 macro_rules! html2 {
     ($s:ident;
         $tag:ident
-        $(# $($idi:ident)? $($idl:literal)? $(($ide:expr))?)?
+        $(# $idi:ident)?
+        $(# $idl:literal)?
+        $(# ($ide:expr))?
         $(. $classi:ident $([$classicond:expr])?)*
         $(. $classl:literal $([$classlcond:expr])?)*
         $(. ($classe:expr) $([$classecond:expr])?)*
@@ -15,14 +17,16 @@ macro_rules! html2 {
         $($sibling:tt)*
     ) => {
         $s.push_str(concat!('<', stringify!($tag)));
-        $($crate::render_id!($s; $($idi)* $($idl)* $($ide)*);)*
+        $crate::render_id!($s; $($idi)* $($idl)* $($ide)*);
         $crate::render_classes!($s; @0 $($classi, $($classicond)*;)* $($classl, $($classlcond)*;)* $($classe, $($classecond)*;)*);
         $s.push('>');
         $crate::html2!($s; $($sibling)*);
     };
     ($s:ident;
         $tag:ident
-        $(# $($idi:ident)? $($idl:literal)? $(($ide:expr))?)?
+        $(# $idi:ident)?
+        $(# $idl:literal)?
+        $(# ($ide:expr))?
         $(. $classi:ident $([$classicond:expr])?)*
         $(. $classl:literal $([$classlcond:expr])?)*
         $(. ($classe:expr) $([$classecond:expr])?)*
@@ -30,7 +34,7 @@ macro_rules! html2 {
         $($sibling:tt)*
     ) => {
         $s.push_str(concat!('<', stringify!($tag)));
-        $($crate::render_id!($s; $($idi)* $($idl)* $($ide)*);)*
+        $crate::render_id!($s; $($idi)* $($idl)* $($ide)*);
         $crate::render_classes!($s; @0 $($classi, $($classicond)*;)* $($classl, $($classlcond)*;)* $($classe, $($classecond)*;)*);
         $s.push('>');
         $crate::html2!($s; $($child)*);
@@ -185,6 +189,7 @@ macro_rules! html2 {
 
 #[macro_export]
 macro_rules! render_id {
+    ($s:ident;) => {};
     ($s:ident; $($idi:ident)? $($idl:literal)?) => {
         $s.push_str(concat!(" id=\"", $(stringify!($idi))* $($idl)*, '"'));
     };
