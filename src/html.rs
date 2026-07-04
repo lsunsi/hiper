@@ -16,14 +16,14 @@ macro_rules! html2 {
         $($($key:ident)-+ $([$keycond:expr])? $(= $($valuel:literal)? $(($valuee:expr))? $([$valuecond:expr])?)?)*
         ;
         $($sibling:tt)*
-    ) => {
+    ) => {{
         $s.push_str(concat!('<', stringify!($tag)));
-        $crate::render_id!($s; $($idi)* $($idl)* $($ide)*);
         $crate::render_classes!($s; @0 $($classi, $($classicond)*;)* $($classl, $($classlcond)*;)* $($classe, $($classecond)*;)*);
+        $crate::render_id!($s; $($idi)* $($idl)* $($ide)*);
         $($crate::render_keyvalue!($s; $($key)*; $($keycond)*$(; $($valuel)* $($valuee)* $(; $valuecond)*)*);)*
         $s.push('>');
         $crate::html2!($s; $($sibling)*);
-    };
+    }};
     ($s:ident;
         $tag:ident
         $(# $idi:ident)?
@@ -35,38 +35,38 @@ macro_rules! html2 {
         $($($key:ident)-+ $([$keycond:expr])? $(= $($valuel:literal)? $(($valuee:expr))? $([$valuecond:expr])?)?)*
         { $($child:tt)* }
         $($sibling:tt)*
-    ) => {
+    ) => {{
         $s.push_str(concat!('<', stringify!($tag)));
-        $crate::render_id!($s; $($idi)* $($idl)* $($ide)*);
         $crate::render_classes!($s; @0 $($classi, $($classicond)*;)* $($classl, $($classlcond)*;)* $($classe, $($classecond)*;)*);
+        $crate::render_id!($s; $($idi)* $($idl)* $($ide)*);
         $($crate::render_keyvalue!($s; $($key)*; $($keycond)*$(; $($valuel)* $($valuee)* $(; $valuecond)*)*);)*
         $s.push('>');
         $crate::html2!($s; $($child)*);
         $s.push_str(concat!("</", stringify!($tag), '>'));
         $crate::html2!($s; $($sibling)*);
-    };
-    ($s:ident; $t:tt$(#$i:tt)?$(.$cs:tt)*[$($kv:tt)*]; $($tt:tt)*) => {{
-        $s.push_str("<");
-        $s.push_str($crate::html2!(@t $t));
-        $crate::html2!($s; @cs $($cs)*);
-        $($crate::html2!($s; @i $i);)?
-        $crate::html2!($s; @kv $($kv)*);
-        $s.push_str(">");
-        $crate::html2!($s; $($tt)*);
     }};
-    ($s:ident; $t:tt$(#$i:tt)?$(.$cs:tt)*[$($kv:tt)*] { $($b:tt)* } $($tt:tt)*) => {{
-        $s.push_str("<");
-        $s.push_str($crate::html2!(@t $t));
-        $crate::html2!($s; @cs $($cs)*);
-        $($crate::html2!($s; @i $i);)?
-        $crate::html2!($s; @kv $($kv)*);
-        $s.push_str(">");
-        $crate::html2!($s; $($b)*);
-        $s.push_str("</");
-        $s.push_str($crate::html2!(@t $t));
-        $s.push_str(">");
-        $crate::html2!($s; $($tt)*);
-    }};
+    // ($s:ident; $t:tt$(#$i:tt)?$(.$cs:tt)*[$($kv:tt)*]; $($tt:tt)*) => {{
+    //     $s.push_str("<");
+    //     $s.push_str($crate::html2!(@t $t));
+    //     $crate::html2!($s; @cs $($cs)*);
+    //     $($crate::html2!($s; @i $i);)?
+    //     $crate::html2!($s; @kv $($kv)*);
+    //     $s.push_str(">");
+    //     $crate::html2!($s; $($tt)*);
+    // }};
+    // ($s:ident; $t:tt$(#$i:tt)?$(.$cs:tt)*[$($kv:tt)*] { $($b:tt)* } $($tt:tt)*) => {{
+    //     $s.push_str("<");
+    //     $s.push_str($crate::html2!(@t $t));
+    //     $crate::html2!($s; @cs $($cs)*);
+    //     $($crate::html2!($s; @i $i);)?
+    //     $crate::html2!($s; @kv $($kv)*);
+    //     $s.push_str(">");
+    //     $crate::html2!($s; $($b)*);
+    //     $s.push_str("</");
+    //     $s.push_str($crate::html2!(@t $t));
+    //     $s.push_str(">");
+    //     $crate::html2!($s; $($tt)*);
+    // }};
 
     ($s:ident; let $i:ident = $e:expr; $($tt:tt)*) => {{
         let $i = $e;

@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 - **Changed**: Render integers through itoap for performance
+- **Changed**: Major sintatic overhaul **BREAKING**
+- **Changed**: Attributes with no value without () **BREAKING**
+- **Changed**: Key-value are not separated by [] anymore **BREAKING**
+- **Removed**: Tags cannot be literal anymore **BREAKING**
 
 ## [0.4.0](https://github.com/lsunsi/hiper/releases/tag/v0.4.0)
 - **Added**: Support let tag for inline declarations
