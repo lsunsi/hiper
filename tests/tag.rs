@@ -10,11 +10,20 @@ macro_rules! assert_render {
 }
 
 #[test]
-fn tag() {
+fn tag_ident() {
     assert_render!(
         { a }
         "<a>"
         "<a></a>"
+    );
+}
+
+#[test]
+fn tag_kebabident() {
+    assert_render!(
+        { web-comp }
+        "<web-comp>"
+        "<web-comp></web-comp>"
     );
 }
 

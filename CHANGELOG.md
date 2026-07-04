@@ -1,6 +1,8 @@
 # Changelog
 
 ## [Unreleased]
+- **Added**: Tag can be kebab-ident now
+- **Added**: Keys can be kebab-ident now
 - **Changed**: Render integers through itoap for performance
 - **Changed**: Major sintatic overhaul **BREAKING**
 - **Changed**: Attributes with no value without () **BREAKING**

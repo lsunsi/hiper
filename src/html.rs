@@ -6,7 +6,7 @@ macro_rules! html {
 #[macro_export]
 macro_rules! html2 {
     ($s:ident;
-        $tag:ident
+        $($tag:ident)-+
         $(# $idi:ident)?
         $(# $idl:literal)?
         $(# ($ide:expr))?
@@ -17,7 +17,7 @@ macro_rules! html2 {
         ;
         $($sibling:tt)*
     ) => {{
-        $s.push_str(concat!('<', stringify!($tag)));
+        $s.push_str(concat!('<', $crate::kebabident!($($tag)*)));
         $crate::render_classes!($s; @0 $($classi, $($classicond)*;)* $($classl, $($classlcond)*;)* $($classe, $($classecond)*;)*);
         $crate::render_id!($s; $($idi)* $($idl)* $($ide)*);
         $($crate::render_keyvalue!($s; $($key)*; $($keycond)*$(; $($valuel)* $($valuee)* $(; $valuecond)*)*);)*
@@ -25,7 +25,7 @@ macro_rules! html2 {
         $crate::html2!($s; $($sibling)*);
     }};
     ($s:ident;
-        $tag:ident
+        $($tag:ident)-+
         $(# $idi:ident)?
         $(# $idl:literal)?
         $(# ($ide:expr))?
@@ -36,13 +36,13 @@ macro_rules! html2 {
         { $($child:tt)* }
         $($sibling:tt)*
     ) => {{
-        $s.push_str(concat!('<', stringify!($tag)));
+        $s.push_str(concat!('<', $crate::kebabident!($($tag)*)));
         $crate::render_classes!($s; @0 $($classi, $($classicond)*;)* $($classl, $($classlcond)*;)* $($classe, $($classecond)*;)*);
         $crate::render_id!($s; $($idi)* $($idl)* $($ide)*);
         $($crate::render_keyvalue!($s; $($key)*; $($keycond)*$(; $($valuel)* $($valuee)* $(; $valuecond)*)*);)*
         $s.push('>');
         $crate::html2!($s; $($child)*);
-        $s.push_str(concat!("</", stringify!($tag), '>'));
+        $s.push_str(concat!("</", $crate::kebabident!($($tag)*), '>'));
         $crate::html2!($s; $($sibling)*);
     }};
     // ($s:ident; $t:tt$(#$i:tt)?$(.$cs:tt)*[$($kv:tt)*]; $($tt:tt)*) => {{
