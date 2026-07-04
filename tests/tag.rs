@@ -149,3 +149,13 @@ fn key_ident_value_expr() {
         "<a href=\"/sobre\" target=\"_blank\"></a>"
     );
 }
+
+#[test]
+fn key_ident_value_let() {
+    let class = "red";
+    assert_render!(
+        { input type=[Some("text")] nope=[None::<&str>] class=[Some(class)] }
+        "<input type=\"text\" class=\"red\">"
+        "<input type=\"text\" class=\"red\"></input>"
+    );
+}
