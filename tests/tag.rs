@@ -122,6 +122,16 @@ fn key_ident_no_value() {
 }
 
 #[test]
+fn key_ident_cond() {
+    let count = 5;
+    assert_render!(
+        { input checked[count > 3] nope[count != 5] disabled[count < 9] }
+        "<input checked disabled>"
+        "<input checked disabled></input>"
+    );
+}
+
+#[test]
 fn key_ident_value_literal() {
     assert_render!(
         { a href="/sobre" target="_blank" }
