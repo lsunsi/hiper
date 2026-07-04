@@ -113,6 +113,15 @@ fn class_mixed() {
 }
 
 #[test]
+fn key_ident_no_value() {
+    assert_render!(
+        { input checked disabled }
+        "<input checked disabled>"
+        "<input checked disabled></input>"
+    );
+}
+
+#[test]
 fn key_ident_value_literal() {
     assert_render!(
         { a href="/sobre" target="_blank" }
