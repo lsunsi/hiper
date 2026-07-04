@@ -122,6 +122,15 @@ fn key_ident_no_value() {
 }
 
 #[test]
+fn key_ident_kebab() {
+    assert_render!(
+        { input hx-get n-o-o-p }
+        "<input hx-get n-o-o-p>"
+        "<input hx-get n-o-o-p></input>"
+    );
+}
+
+#[test]
 fn key_ident_cond() {
     let count = 5;
     assert_render!(

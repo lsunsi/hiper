@@ -13,14 +13,14 @@ macro_rules! html2 {
         $(. $classi:ident $([$classicond:expr])?)*
         $(. $classl:literal $([$classlcond:expr])?)*
         $(. ($classe:expr) $([$classecond:expr])?)*
-        $($key:ident $([$keycond:expr])? $(= $($valuel:literal)? $(($valuee:expr))? $([$valuecond:expr])?)?)*
+        $($($key:ident)-+ $([$keycond:expr])? $(= $($valuel:literal)? $(($valuee:expr))? $([$valuecond:expr])?)?)*
         ;
         $($sibling:tt)*
     ) => {
         $s.push_str(concat!('<', stringify!($tag)));
         $crate::render_id!($s; $($idi)* $($idl)* $($ide)*);
         $crate::render_classes!($s; @0 $($classi, $($classicond)*;)* $($classl, $($classlcond)*;)* $($classe, $($classecond)*;)*);
-        $($crate::render_keyvalue!($s; $key $($keycond)*$(; $($valuel)* $($valuee)* $(; $valuecond)*)*);)*
+        $($crate::render_keyvalue!($s; $($key)*; $($keycond)*$(; $($valuel)* $($valuee)* $(; $valuecond)*)*);)*
         $s.push('>');
         $crate::html2!($s; $($sibling)*);
     };
@@ -32,14 +32,14 @@ macro_rules! html2 {
         $(. $classi:ident $([$classicond:expr])?)*
         $(. $classl:literal $([$classlcond:expr])?)*
         $(. ($classe:expr) $([$classecond:expr])?)*
-        $($key:ident $([$keycond:expr])? $(= $($valuel:literal)? $(($valuee:expr))? $([$valuecond:expr])?)?)*
+        $($($key:ident)-+ $([$keycond:expr])? $(= $($valuel:literal)? $(($valuee:expr))? $([$valuecond:expr])?)?)*
         { $($child:tt)* }
         $($sibling:tt)*
     ) => {
         $s.push_str(concat!('<', stringify!($tag)));
         $crate::render_id!($s; $($idi)* $($idl)* $($ide)*);
         $crate::render_classes!($s; @0 $($classi, $($classicond)*;)* $($classl, $($classlcond)*;)* $($classe, $($classecond)*;)*);
-        $($crate::render_keyvalue!($s; $key $($keycond)*$(; $($valuel)* $($valuee)* $(; $valuecond)*)*);)*
+        $($crate::render_keyvalue!($s; $($key)*; $($keycond)*$(; $($valuel)* $($valuee)* $(; $valuecond)*)*);)*
         $s.push('>');
         $crate::html2!($s; $($child)*);
         $s.push_str(concat!("</", stringify!($tag), '>'));
@@ -240,27 +240,33 @@ macro_rules! render_classes {
 
 #[macro_export]
 macro_rules! render_keyvalue {
-    ($s:ident; $key:ident;; $value:expr) => {
+    ($s:ident; $($key:ident)+;;; $value:expr) => {
         if let Some(value) = $value {
-            $s.push_str(concat!(' ', stringify!($key), "=\""));
+            $s.push_str(concat!(' ', $crate::kebabident!($($key)*), "=\""));
             $s.push_str(value);
             $s.push('"');
         }
     };
-    ($s:ident; $key:ident; $value:literal) => {
-        $s.push_str(concat!(' ', stringify!($key), "=\"", $value, '"'));
+    ($s:ident; $($key:ident)+;; $value:literal) => {
+        $s.push_str(concat!(' ', $crate::kebabident!($($key)*), "=\"", $value, '"'));
     };
-    ($s:ident; $key:ident; $value:expr) => {
-        $s.push_str(concat!(' ', stringify!($key), "=\""));
+    ($s:ident; $($key:ident)+;; $value:expr) => {
+        $s.push_str(concat!(' ', $crate::kebabident!($($key)*), "=\""));
         $s.push_str(&$value as &str);
         $s.push('"');
     };
-    ($s:ident; $key:ident $cond:expr) => {
+    ($s:ident; $($key:ident)+; $cond:expr) => {
         if $cond {
-            $s.push_str(concat!(' ', stringify!($key)));
+            $s.push_str(concat!(' ', $crate::kebabident!($($key)*)));
         }
     };
-    ($s:ident; $key:ident) => {
-        $s.push_str(concat!(' ', stringify!($key)));
+    ($s:ident; $($key:ident)+;) => {
+        $s.push_str(concat!(' ', $crate::kebabident!($($key)*)));
     };
+}
+
+#[macro_export]
+macro_rules! kebabident {
+    ($head:ident) => { stringify!($head) };
+    ($head:ident $($tail:ident)*) => { concat!(stringify!($head), '-', $crate::kebabident!($($tail)*)) };
 }
