@@ -13,14 +13,14 @@ macro_rules! html2 {
         $(. $classi:ident $([$classicond:expr])?)*
         $(. $classl:literal $([$classlcond:expr])?)*
         $(. ($classe:expr) $([$classecond:expr])?)*
-        $($key:ident $([$keycond:expr])? $(= $value:literal)?)*
+        $($key:ident $([$keycond:expr])? $(= $($valuel:literal)? $(($valuee:expr))?)?)*
         ;
         $($sibling:tt)*
     ) => {
         $s.push_str(concat!('<', stringify!($tag)));
         $crate::render_id!($s; $($idi)* $($idl)* $($ide)*);
         $crate::render_classes!($s; @0 $($classi, $($classicond)*;)* $($classl, $($classlcond)*;)* $($classe, $($classecond)*;)*);
-        $($crate::render_keyvalue!($s; $key $($keycond)* $($value)*);)*
+        $($crate::render_keyvalue!($s; $key $($keycond)*; $($($valuel)* $($valuee)*)*);)*
         $s.push('>');
         $crate::html2!($s; $($sibling)*);
     };
@@ -32,14 +32,14 @@ macro_rules! html2 {
         $(. $classi:ident $([$classicond:expr])?)*
         $(. $classl:literal $([$classlcond:expr])?)*
         $(. ($classe:expr) $([$classecond:expr])?)*
-        $($key:ident $([$keycond:expr])? $(= $value:literal)?)*
+        $($key:ident $([$keycond:expr])? $(= $($valuel:literal)? $(($valuee:expr))?)?)*
         { $($child:tt)* }
         $($sibling:tt)*
     ) => {
         $s.push_str(concat!('<', stringify!($tag)));
         $crate::render_id!($s; $($idi)* $($idl)* $($ide)*);
         $crate::render_classes!($s; @0 $($classi, $($classicond)*;)* $($classl, $($classlcond)*;)* $($classe, $($classecond)*;)*);
-        $($crate::render_keyvalue!($s; $key $($keycond)* $($value)*);)*
+        $($crate::render_keyvalue!($s; $key $($keycond)*; $($($valuel)* $($valuee)*)*);)*
         $s.push('>');
         $crate::html2!($s; $($child)*);
         $s.push_str(concat!("</", stringify!($tag), '>'));
@@ -240,15 +240,20 @@ macro_rules! render_classes {
 
 #[macro_export]
 macro_rules! render_keyvalue {
-    ($s:ident; $key:ident $value:literal) => {
+    ($s:ident; $key:ident; $value:literal) => {
         $s.push_str(concat!(' ', stringify!($key), "=\"", $value, '"'));
     };
-    ($s:ident; $key:ident $cond:expr) => {
+    ($s:ident; $key:ident; $value:expr) => {
+        $s.push_str(concat!(' ', stringify!($key), "=\""));
+        $s.push_str(&$value as &str);
+        $s.push('"');
+    };
+    ($s:ident; $key:ident $cond:expr;) => {
         if $cond {
             $s.push_str(concat!(' ', stringify!($key)));
         }
     };
-    ($s:ident; $key:ident) => {
+    ($s:ident; $key:ident;) => {
         $s.push_str(concat!(' ', stringify!($key)));
     };
 }

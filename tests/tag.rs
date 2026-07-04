@@ -139,3 +139,13 @@ fn key_ident_value_literal() {
         "<a href=\"/sobre\" target=\"_blank\"></a>"
     );
 }
+
+#[test]
+fn key_ident_value_expr() {
+    let target = "_BLANK";
+    assert_render!(
+        { a href=("/sobre") target=(target.to_lowercase()) }
+        "<a href=\"/sobre\" target=\"_blank\">"
+        "<a href=\"/sobre\" target=\"_blank\"></a>"
+    );
+}
