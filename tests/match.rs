@@ -11,13 +11,13 @@ fn tag_match_tag() {
     (hiper::html! {
         "-"
         match (carlos) {
-            Carlos::Roberto=> { "roberto" },
-            Carlos::Marcos=> { strong { "marcos" } }
+            Carlos::Roberto => { "roberto" },
+            Carlos::Marcos => { strong { "marcos" } }
         }
         "!"
         match (Carlos::Roberto) {
-            Carlos::Roberto=> { "roberto" },
-            Carlos::Marcos=> { strong { "marcos" } }
+            Carlos::Roberto => { "roberto" },
+            Carlos::Marcos => { strong { "marcos" } }
         }
         "?"
     })(&mut s);

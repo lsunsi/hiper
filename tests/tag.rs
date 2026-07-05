@@ -2,8 +2,8 @@ macro_rules! assert_render {
     ({ $($tt:tt)* } $lv:literal $ln:literal) => {{
         let mut sv = String::new();
         let mut sn = String::new();
-        hiper::html2! { sv; $($tt)* ; };
-        hiper::html2! { sn; $($tt)* {} };
+        (hiper::html! { $($tt)* ; })(&mut sv);
+        (hiper::html! { $($tt)* {} })(&mut sn);
         assert_eq!(sv, $lv);
         assert_eq!(sn, $ln);
     }};

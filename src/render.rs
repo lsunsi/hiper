@@ -1,3 +1,4 @@
+/// trait used for rendering values into html
 pub trait Render {
     fn render(self, to: &mut String);
 }

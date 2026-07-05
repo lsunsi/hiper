@@ -1,13 +1,13 @@
 #[test]
 fn children() {
     let mut s = String::new();
-    hiper::html2! { s; html { body { main { div { p; } } } } };
+    (hiper::html! { html { body { main { div { p; } } } } })(&mut s);
     assert_eq!(s, "<html><body><main><div><p></div></main></body></html>");
 }
 
 #[test]
 fn siblings() {
     let mut s = String::new();
-    hiper::html2! { s; a {} a {} a; a; a {} a; };
+    (hiper::html! { a {} a {} a; a; a {} a; })(&mut s);
     assert_eq!(s, "<a></a><a></a><a><a><a></a><a>");
 }

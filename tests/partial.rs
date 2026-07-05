@@ -15,6 +15,14 @@ fn args_no_children() {
 }
 
 #[test]
+fn no_args_and_children() {
+    let mut s = String::new();
+    let navbar = |children| hiper::html! { nav { title { "oiblz" } (children) } };
+    (hiper::html! { navbar() { br; } })(&mut s);
+    assert_eq!(s, "<nav><title>oiblz</title><br></nav>");
+}
+
+#[test]
 fn args_and_children() {
     let mut s = String::new();
     let navbar = |title, children| hiper::html! { nav { title { (title) } (children) } };
