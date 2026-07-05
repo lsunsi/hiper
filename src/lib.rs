@@ -1,3 +1,5 @@
+#![warn(clippy::pedantic)]
+
 mod escape;
 mod html;
 mod raw;
