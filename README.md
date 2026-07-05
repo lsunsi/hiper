@@ -90,10 +90,10 @@ let page = |enabled: bool, value: Option<&'static str>| html! {
 # assert_eq!(s, r#"<input disabled value="oiblz">"#);
 # let mut s = String::new();
 # page(true, None).render(&mut s);
-# assert_eq!(s, r#"<input disabled value="oiblz">"#);
+# assert_eq!(s, r#"<input class="glowing">"#);
 # let mut s = String::new();
 # page(false, None).render(&mut s);
-# assert_eq!(s, r#"<input disabled value="oiblz">"#);
+# assert_eq!(s, r#"<input disabled>"#);
 ```
 ### Control flow
 ```rust

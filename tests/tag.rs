@@ -92,6 +92,16 @@ fn class_ident_cond() {
 }
 
 #[test]
+fn class_ident_cond_none_pass() {
+    let x = 6;
+    assert_render!(
+        { a.classe[x > 9].nope[x == 9].klass[x < 0] }
+        "<a>"
+        "<a></a>"
+    );
+}
+
+#[test]
 fn class_literal() {
     assert_render!(
         { a."classe"."klass" }

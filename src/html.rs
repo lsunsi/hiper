@@ -134,10 +134,15 @@ macro_rules! render_id {
 macro_rules! render_classes {
     ($s:ident; @0) => {};
     ($s:ident; @0 $($tt:tt)+) => {
-        $s.push_str(" class=\"");
+        const CLASS: &str = " class=\"";
+        $s.push_str(CLASS);
         $crate::render_classes!($s; @n $($tt)*);
-        $s.pop();
-        $s.push('"');
+        if $s.ends_with(CLASS) {
+            $s.truncate($s.len() - CLASS.len());
+        } else {
+            $s.pop();
+            $s.push('"');
+        }
     };
     ($s:ident; @n $($classi:ident)* $($classl:literal)?, $classcond:expr; $($tt:tt)*) => {
         if $classcond {
