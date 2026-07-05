@@ -37,6 +37,15 @@ fn id_ident() {
 }
 
 #[test]
+fn id_kebabident() {
+    assert_render!(
+        { a #i-d-ê }
+        "<a id=\"i-d-ê\">"
+        "<a id=\"i-d-ê\"></a>"
+    );
+}
+
+#[test]
 fn id_literal() {
     assert_render!(
         { a # "idê" }
@@ -60,6 +69,15 @@ fn class_ident() {
         { a.classe.klass }
         "<a class=\"classe klass\">"
         "<a class=\"classe klass\"></a>"
+    );
+}
+
+#[test]
+fn class_kebabident() {
+    assert_render!(
+        { a.classe-klass }
+        "<a class=\"classe-klass\">"
+        "<a class=\"classe-klass\"></a>"
     );
 }
 
