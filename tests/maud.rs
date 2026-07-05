@@ -5,44 +5,40 @@ macro_rules! assert_tmpl {
         (hiper::html! {$($hiper)+})(&mut hiper);
         assert_eq!(maud.0, hiper);
     }};
+    ($($templ:tt)+) => {
+        assert_tmpl!({$($templ)+}, {$($templ)+})
+    };
 }
 
 #[test]
 fn index() {
-    assert_tmpl!({
+    assert_tmpl! {
         h1 { "Hello, world!" }
         p.intro {
             "This is an example of the "
             a href="https://github.com/lambda-fairy/maud" { "Maud" }
             " template language."
         }
-    }, {
-        h1 { "Hello, world!" }
-        p class = "intro" {
-            "This is an example of the "
-            a href="https://github.com/lambda-fairy/maud" { "Maud" }
-            " template language."
-        }
-    });
+    };
 }
 
 mod getting_started {
     #[test]
     fn index() {
         let name = "Lyra";
-        assert_tmpl!({ p { "Hi, " (name) "!" } }, { p { "Hi, " (name) "!" } });
+        assert_tmpl! { p { "Hi, " (name) "!" } };
     }
 }
 
 mod text_and_escaping {
     #[test]
     fn text() {
-        assert_tmpl!({ "Oatmeal, are you crazy?" }, { "Oatmeal, are you crazy?" });
+        assert_tmpl! { "Oatmeal, are you crazy?" };
     }
 
     #[test]
     fn raw_strings() {
-        assert_tmpl!({
+        assert_tmpl! {
             pre {
                 r#"
                 Rocks, these are my rocks.
@@ -53,18 +49,7 @@ mod text_and_escaping {
                 And gray.
             "#
             }
-        }, {
-            pre {
-                r#"
-                Rocks, these are my rocks.
-                Sediments make me sedimental.
-                Smooth and round,
-                Asleep in the ground.
-                Shades of brown
-                And gray.
-            "#
-            }
-        });
+        };
     }
 
     #[test]
@@ -86,24 +71,18 @@ mod text_and_escaping {
 mod elements_and_attributes {
     #[test]
     fn elements_with_contents() {
-        assert_tmpl!({
+        assert_tmpl! {
             h1 { "Poem" }
             p {
                 strong { "Rock," }
                 " you are a rock."
             }
-        }, {
-            h1 { "Poem" }
-            p {
-                strong { "Rock," }
-                " you are a rock."
-            }
-        });
+        };
     }
 
     #[test]
     fn void_elements() {
-        assert_tmpl!({
+        assert_tmpl! {
             link rel="stylesheet" href="poetry.css";
             p {
                 "Rock, you are a rock."
@@ -114,38 +93,22 @@ mod elements_and_attributes {
                 br;
                 "Rock."
             }
-        }, {
-            link rel="stylesheet" href="poetry.css";
-            p {
-                "Rock, you are a rock."
-                br;
-                "Gray, you are gray,"
-                br;
-                "Like a rock, which you are."
-                br;
-                "Rock."
-            }
-        });
+        };
     }
 
     #[test]
     fn custom_elements_and_data_attributes() {
-        assert_tmpl!({
+        assert_tmpl! {
             article data-index="12345" {
                 h1 { "My blog" }
                 tag-cloud { "pinkie pie pony cute" }
             }
-        }, {
-            article data-index="12345" {
-                h1 { "My blog" }
-                tag-cloud { "pinkie pie pony cute" }
-            }
-        });
+        };
     }
 
     #[test]
     fn non_empty_attributes() {
-        assert_tmpl!({
+        assert_tmpl! {
             ul {
                 li {
                     a href="about:blank" { "Apple Bloom" }
@@ -158,60 +121,32 @@ mod elements_and_attributes {
                     small { "(also a chicken)" }
                 }
             }
-        }, {
-            ul {
-                li {
-                    a href="about:blank" { "Apple Bloom" }
-                }
-                li class="lower-middle" {
-                    "Sweetie Belle"
-                }
-                li dir="rtl" {
-                    "Scootaloo "
-                    small { "(also a chicken)" }
-                }
-            }
-        });
+        };
     }
 
     #[test]
     fn empty_attributes() {
-        assert_tmpl!({
+        assert_tmpl! {
             form {
                 input type="checkbox" name="cupcakes" checked;
                 " "
                 label for="cupcakes" { "Do you like cupcakes?" }
             }
-        }, {
-            form {
-                input type="checkbox" name="cupcakes" checked;
-                " "
-                label for="cupcakes" { "Do you like cupcakes?" }
-            }
-        });
+        };
     }
 
     #[test]
     fn classes_and_ids_base() {
-        assert_tmpl!({
-            input #cannon .big.scary.bright-red type="button" value="Launch Party Cannon";
-        }, {
-            input #cannon .big.scary."bright-red" type="button" value="Launch Party Cannon";
-        });
+        assert_tmpl! { input #cannon .big.scary.bright-red type="button" value="Launch Party Cannon"; };
     }
 
     #[test]
     fn classes_and_ids_quoted() {
-        assert_tmpl!({
-            div."col-sm-2" { "Bootstrap column!" }
-        }, {
-            div."col-sm-2" { "Bootstrap column!" }
-        });
+        assert_tmpl! { div."col-sm-2" { "Bootstrap column!" } };
     }
 
     #[test]
     fn implicit_div_elements() {
-        // no support for implicit divs
         assert_tmpl!({
             #main {
                 "Main content!"
@@ -231,19 +166,13 @@ mod splices_and_toggles {
     fn base() {
         let best_pony = "Pinkie Pie";
         let numbers = [1, 2, 3, 4];
-        assert_tmpl!({
+        assert_tmpl! {
             p { "Hi, " (best_pony) "!" }
             p {
                 "I have " (numbers.len()) " numbers, "
                 "and the first one is " (numbers[0])
             }
-        }, {
-            p { "Hi, " (best_pony) "!" }
-            p {
-                "I have " (numbers.len()) " numbers, "
-                "and the first one is " (numbers[0])
-            }
-        });
+        };
     }
 
     #[test]
@@ -267,35 +196,24 @@ mod splices_and_toggles {
             Foo
         }
 
-        assert_tmpl!({
+        assert_tmpl! {
             p {
                 ({
                     let f: Foo = something_convertible_to_foo();
                     f.time().format("%H%Mh")
                 })
             }
-        }, {
-            p {
-                ({
-                    let f: Foo = something_convertible_to_foo();
-                    f.time().format("%H%Mh")
-                })
-            }
-        });
+        };
     }
 
     #[test]
     fn splices_in_attributes_base() {
         let secret_message = "Surprise!";
-        assert_tmpl!({
+        assert_tmpl! {
             p title=(secret_message) {
                 "Nothing to see here, move along."
             }
-        }, {
-            p title=(secret_message) {
-                "Nothing to see here, move along."
-            }
-        });
+        };
     }
 
     #[test]
@@ -342,54 +260,42 @@ mod splices_and_toggles {
     #[test]
     fn toggles_base() {
         let allow_editing = true;
-        assert_tmpl!({
+        assert_tmpl! {
             p contenteditable[allow_editing] {
                 "Edit me, I "
                 em { "dare" }
                 " you."
             }
-        }, {
-            p contenteditable[allow_editing] {
-                "Edit me, I "
-                em { "dare" }
-                " you."
-            }
-        });
+        };
     }
 
     #[test]
-    #[ignore]
     fn toggles_classes() {
-        unimplemented!();
-        // let cuteness = 95;
-        // assert_tmpl!({
-        //     p.cute[cuteness > 50] { "Squee!" }
-        // }, {
-        //     p.cute[cuteness > 50] { "Squee!" }
-        // });
+        let cuteness = 95;
+        assert_tmpl! {
+            p.cute[cuteness > 50] { "Squee!" }
+        };
     }
 
     #[test]
-    #[ignore]
     fn optional_attributes_with_values() {
-        unimplemented!();
-        // assert_tmpl!({
-        //     p title=[Some("Good password")] { "Correct horse" }
+        assert_tmpl!({
+            p title=[Some("Good password")] { "Correct horse" }
 
-        //     @let value = Some(42);
-        //     input value=[value];
+            @let value = Some(42);
+            input value=[value];
 
-        //     @let title: Option<&str> = None;
-        //     p title=[title] { "Battery staple" }
-        // }, {
-        //     p title=[Some("Good password")] { "Correct horse" }
+            @let title: Option<&str> = None;
+            p title=[title] { "Battery staple" }
+        }, {
+            p title=[Some("Good password")] { "Correct horse" }
 
-        //     @let value = Some(42);
-        //     input value=[value];
+            let value = Some("42");
+            input value=[value];
 
-        //     @let title: Option<&str> = None;
-        //     p title=[title] { "Battery staple" }
-        // });
+            let title = None::<&str>;
+            p title=[title] { "Battery staple" }
+        });
     }
 }
 
