@@ -1,5 +1,4 @@
 /// takes a template definition and returns a render implementation
-
 #[macro_export]
 macro_rules! html {
     ($($tt:tt)*) => { move |s: &mut String| $crate::render!(s; $($tt)*) }
