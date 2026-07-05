@@ -1,8 +1,11 @@
 # Changelog
 
 ## [Unreleased]
+
+## [0.5.0](https://github.com/lsunsi/hiper/releases/tag/v0.5.0)
 - **Added**: Tag can be kebab-ident now
 - **Added**: Keys can be kebab-ident now
+- **Added**: Class can be kebab-ident now
 - **Changed**: Render integers through itoap for performance
 - **Changed**: Major sintatic overhaul **BREAKING**
 - **Changed**: Attributes with no value without () **BREAKING**
